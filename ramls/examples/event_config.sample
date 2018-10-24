@@ -1,0 +1,19 @@
+{
+  "id":"1",
+  "name":"password reset",
+  "active":"true",
+  "templates":[
+      {
+        "deliveryChannel":"email",
+        "templateId":"1"
+      },
+      {
+        "deliveryChannel":"sms",
+        "templateId":"2"
+      }
+  ],
+  "metadata":
+  {
+    "date":"1980-12-20"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Event response",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "identifier",
+      "type": "string"
+    },
+    "name": {
+      "description": "configuration name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "id"
+  ]
+}

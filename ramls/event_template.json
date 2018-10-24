@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Event template",
+  "type": "object",
+  "properties": {
+    "templateId": {
+      "description": "template identifier",
+      "type": "string"
+    },
+    "deliveryChannel": {
+      "description": "delivery channel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "templateId",
+    "deliveryChannel"
+  ]
+}
