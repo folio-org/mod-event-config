@@ -28,40 +28,64 @@ public class EventConfigAPIs implements EventConfig {
     this.service = new StubStorageServiceImpl();
   }
 
+  /**
+   * Create new event config
+   *
+   * @param entity       the event configuration {@link EventEntity}
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   */
   @Override
   public void postEventConfig(EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
-    logger.debug(" POST | `/eventConfig` | entityId: " + entity.getId());
     EventEntity eventEntity = service.save(entity);
     asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, PostEventConfigResponse.class));
   }
 
+  /**
+   * Get event config by id
+   *
+   * @param id           the configuration event ID
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   */
   @Override
   public void getEventConfigById(String id, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
-    logger.debug(" GET | `/eventConfig/{id}` | entityId: " + id);
     EventEntity eventEntity = service.findById(id);
     if (Objects.isNull(eventEntity)) {
+      logger.error(EVENT_ENTITY_NOT_FOUND);
       asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, GetEventConfigByIdResponse.class));
       return;
     }
     asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, GetEventConfigByIdResponse.class));
   }
 
+  /**
+   * Update event config
+   *
+   * @param id           the configuration event ID
+   * @param entity       the event configuration {@link EventEntity}
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   */
   @Override
   public void putEventConfigById(String id, EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
-    logger.debug(" PUT | `/eventConfig/{id}` | entityId: " + id);
     EventEntity eventEntity = service.update(id, entity);
     if (Objects.isNull(eventEntity)) {
+      logger.error(EVENT_ENTITY_NOT_FOUND);
       asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, PutEventConfigByIdResponse.class));
       return;
     }
     asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, PutEventConfigByIdResponse.class));
   }
 
+  /**
+   * Delete event config
+   *
+   * @param id           the configuration event ID
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   */
   @Override
   public void deleteEventConfigById(String id, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
-    logger.debug(" DELETE | `/eventConfig/{id}` | entityId: " + id);
     EventResponse eventResponse = service.delete(id);
     if (Objects.isNull(eventResponse)) {
+      logger.error(EVENT_ENTITY_NOT_FOUND);
       asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, DeleteEventConfigByIdResponse.class));
       return;
     }

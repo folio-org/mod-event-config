@@ -18,7 +18,7 @@ public class InitAPIs implements InitAPI {
   @Override
   public void init(Vertx vertx, Context context, Handler<AsyncResult<Boolean>> handler) {
     final int port = Integer.parseInt(System.getProperty("port", "8080"));
-    logger.info(InitAPIs.class.getSimpleName() + " | " + ManagementFactory.getRuntimeMXBean().getName() + " on port " + port);
+    logger.info(ManagementFactory.getRuntimeMXBean().getName() + " on port " + port);
     handler.handle(Future.succeededFuture(true));
   }
 }
