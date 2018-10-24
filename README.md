@@ -1,4 +1,4 @@
-# mod-sample
+# mod-event-config
 
 Copyright (C) 2018 The Open Library Foundation
 
