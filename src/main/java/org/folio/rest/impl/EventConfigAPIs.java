@@ -12,7 +12,6 @@ import org.folio.services.StorageService;
 import org.folio.services.impl.StubStorageServiceImpl;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,7 +36,7 @@ public class EventConfigAPIs implements EventConfig {
   @Override
   public void postEventConfig(EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
     EventEntity eventEntity = service.save(entity);
-    asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, PostEventConfigResponse.class));
+    asyncHandler.handle(createFutureResponse(PostEventConfigResponse.respond200WithApplicationJson(eventEntity)));
   }
 
   /**
@@ -51,10 +50,10 @@ public class EventConfigAPIs implements EventConfig {
     EventEntity eventEntity = service.findById(id);
     if (Objects.isNull(eventEntity)) {
       logger.error(EVENT_ENTITY_NOT_FOUND);
-      asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, GetEventConfigByIdResponse.class));
+      asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond400WithTextPlain(EVENT_ENTITY_NOT_FOUND)));
       return;
     }
-    asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, GetEventConfigByIdResponse.class));
+    asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond200WithApplicationJson(eventEntity)));
   }
 
   /**
@@ -69,10 +68,10 @@ public class EventConfigAPIs implements EventConfig {
     EventEntity eventEntity = service.update(id, entity);
     if (Objects.isNull(eventEntity)) {
       logger.error(EVENT_ENTITY_NOT_FOUND);
-      asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, PutEventConfigByIdResponse.class));
+      asyncHandler.handle(createFutureResponse(PutEventConfigByIdResponse.respond400WithTextPlain(EVENT_ENTITY_NOT_FOUND)));
       return;
     }
-    asyncHandler.handle(createFutureResponse(Status.OK, eventEntity, PutEventConfigByIdResponse.class));
+    asyncHandler.handle(createFutureResponse(PutEventConfigByIdResponse.respond200WithApplicationJson(eventEntity)));
   }
 
   /**
@@ -86,9 +85,9 @@ public class EventConfigAPIs implements EventConfig {
     EventResponse eventResponse = service.delete(id);
     if (Objects.isNull(eventResponse)) {
       logger.error(EVENT_ENTITY_NOT_FOUND);
-      asyncHandler.handle(createFutureResponse(Status.BAD_REQUEST, EVENT_ENTITY_NOT_FOUND, DeleteEventConfigByIdResponse.class));
+      asyncHandler.handle(createFutureResponse(DeleteEventConfigByIdResponse.respond400WithTextPlain(EVENT_ENTITY_NOT_FOUND)));
       return;
     }
-    asyncHandler.handle(createFutureResponse(Status.OK, eventResponse, DeleteEventConfigByIdResponse.class));
+    asyncHandler.handle(createFutureResponse(DeleteEventConfigByIdResponse.respond200WithApplicationJson(eventResponse)));
   }
 }

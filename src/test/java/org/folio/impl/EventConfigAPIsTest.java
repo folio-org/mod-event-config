@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -35,16 +36,19 @@ public class EventConfigAPIsTest {
   private static final String OKAPI_TOKEN_VAL = "test_token";
   private static final String PATH_TEMPLATE = "%s/%s";
 
-  private static Headers headers;
+  private static RequestSpecification request;
   private static Vertx vertx;
-  private static int port;
 
   @BeforeClass
   public static void setUpClass(final TestContext context) {
     Async async = context.async();
     vertx = Vertx.vertx();
-    port = NetworkUtils.nextFreePort();
-    headers = new Headers(new Header(OKAPI_HEADER_TENANT, OKAPI_TENANT_VAL), new Header(OKAPI_HEADER_TOKEN, OKAPI_TOKEN_VAL));
+    int port = NetworkUtils.nextFreePort();
+    Headers headers = new Headers(new Header(OKAPI_HEADER_TENANT, OKAPI_TENANT_VAL), new Header(OKAPI_HEADER_TOKEN, OKAPI_TOKEN_VAL));
+    request = RestAssured.given()
+      .port(port)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(headers);
 
     DeploymentOptions restDeploymentOptions = new DeploymentOptions().setConfig(new JsonObject().put(HTTP_PORT, port));
     vertx.deployVerticle(RestVerticle.class.getName(), restDeploymentOptions, res -> async.complete());
@@ -159,39 +163,25 @@ public class EventConfigAPIsTest {
   }
 
   private Response requestPostEventConfig(JsonObject expectedEntity) {
-    return RestAssured.given()
-      .port(port)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(headers)
-      .body(expectedEntity.toString())
+    return request.body(expectedEntity.toString())
       .when()
       .post(REST_PATH);
   }
 
   private Response requestGetEventById(String expectedId) {
-    return RestAssured.given()
-      .port(port)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(headers)
+    return request
       .when()
       .get(String.format(PATH_TEMPLATE, REST_PATH, expectedId));
   }
 
   private Response requestPutEventConfig(String id, JsonObject entity) {
-    return RestAssured.given().port(port)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(headers)
-      .body(entity.toString())
+    return request.body(entity.toString())
       .when()
       .put(String.format(PATH_TEMPLATE, REST_PATH, id));
   }
 
   private Response requestDeleteEntityById(String id) {
-    return RestAssured.given()
-      .port(port)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(headers)
-      .when()
+    return request.when()
       .delete(String.format(PATH_TEMPLATE, REST_PATH, id));
   }
 }
