@@ -21,79 +21,79 @@ traits:
   post:
     description: Create new event config in storage
     body:
-        application/json:
-          schema: eventEntity
+      application/json:
+        schema: eventEntity
     responses:
-          200:
-            description: "success"
-            body:
-              application/json:
-                schema: eventEntity
-          400:
-            description: "Bad request"
-            body:
-              text/plain:
-                example: "Bad request"
-          500:
-            description: "Internal server error"
-            body:
-              text/plain:
-                example: "Internal server error"
+      200:
+        description: "success"
+        body:
+          application/json:
+            schema: eventEntity
+      400:
+        description: "Bad request"
+        body:
+          text/plain:
+            example: "Bad request"
+      500:
+        description: "Internal server error"
+        body:
+          text/plain:
+            example: "Internal server error"
   /{id}:
     get:
       description: Get event config from storage
       responses:
-          200:
-            description: "success"
-            body:
-              application/json:
-                schema: eventEntity
-          400:
-            description: "Bad request"
-            body:
-              text/plain:
-                example: "Bad request"
-          500:
-            description: "Internal server error"
-            body:
-              text/plain:
-                example: "Internal server error"
+        200:
+          description: "success"
+          body:
+            application/json:
+              schema: eventEntity
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"
     put:
       description: Update event config in storage
       body:
         application/json:
           schema: eventEntity
       responses:
-         200:
-           description: "success"
-           body:
-             application/json:
-               schema: eventEntity
-         400:
-           description: "Bad request"
-           body:
-             text/plain:
+        200:
+          description: "success"
+          body:
+            application/json:
+              schema: eventEntity
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
               example: "Bad request"
-         500:
-           description: "Internal server error"
-           body:
-             text/plain:
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
               example: "Internal server error"
     delete:
       description: Delete event config from storage
       responses:
-         200:
-           description: "success"
-           body:
-             application/json:
-               schema: eventResponse
-         400:
-           description: "Bad request"
-           body:
-             text/plain:
-               example: "Bad request"
-         500:
-           description: "Internal server error"
-           body:
-             text/plain:
-               example: "Internal server error"
+        200:
+          description: "success"
+          body:
+            application/json:
+              schema: eventResponse
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"

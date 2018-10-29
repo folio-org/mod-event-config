@@ -10,6 +10,10 @@ import org.folio.rest.jaxrs.model.EventResponse;
 import org.folio.services.StorageService;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -85,6 +89,12 @@ public class StubStorageServiceImpl implements StorageService {
     ClassLoader classLoader = EventConfigAPIs.class.getClassLoader();
     File file = new File(Objects.requireNonNull(classLoader.getResource(FILE_NAME)).getFile());
     try {
+      if (!file.exists()) {
+        file = new File(FILE_NAME);
+        if (!file.exists()) {
+          createStubFileInRootDir(file);
+        }
+      }
       String fileToString = FileUtils.readFileToString(file, FILE_ENCODING);
       return new JsonArray(fileToString);
     } catch (Exception e) {
@@ -96,9 +106,20 @@ public class StubStorageServiceImpl implements StorageService {
     ClassLoader classLoader = EventConfigAPIs.class.getClassLoader();
     File file = new File(Objects.requireNonNull(classLoader.getResource(FILE_NAME)).getFile());
     try {
+      if (!file.exists()) {
+        file = new File(FILE_NAME);
+        if (!file.exists()) {
+          createStubFileInRootDir(file);
+        }
+      }
       FileUtils.write(file, stubConfigurations.toString(), FILE_ENCODING);
     } catch (Exception e) {
       throw new IllegalArgumentException(String.format(ERROR_FILE_NOT_FOUND, FILE_NAME));
     }
+  }
+
+  private void createStubFileInRootDir(File file) throws IOException {
+    Files.createFile(file.toPath(), PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxrwxrwx")));
+    Files.write(file.toPath(), "[]".getBytes(), StandardOpenOption.APPEND);
   }
 }
