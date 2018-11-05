@@ -139,23 +139,22 @@ public class EventConfigAPIsTest {
     expectedEntity.put("id", actualId);
 
     // get the event config by id
-    response = requestGetEventById(actualId)
+    Response responseGet = requestGetEventById(actualId)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .response();
-    actualEntity = new JsonObject(response.getBody().print());
-    assertEquals(expectedEntity, actualEntity);
+    JsonObject actualEntityGet = new JsonObject(responseGet.getBody().print());
+    assertEquals(expectedEntity, actualEntityGet);
 
     // update the event config
-    expectedEntity = getJsonEntity(actualId, "new name", false, new JsonArray());
-    response = requestPutEventConfig(actualId, expectedEntity)
+    Response responsePut = requestPutEventConfig(actualId, expectedEntity)
       .then()
       .statusCode(HttpStatus.SC_OK)
       .extract()
       .response();
-    actualEntity = new JsonObject(response.getBody().print());
-    assertEquals(expectedEntity, actualEntity);
+    JsonObject expectedEntityPut = new JsonObject(responsePut.getBody().print());
+    assertEquals(expectedEntity, expectedEntityPut);
   }
 
   @Test

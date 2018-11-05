@@ -10,12 +10,12 @@ import io.vertx.core.logging.LoggerFactory;
 import org.folio.rest.jaxrs.model.EventEntity;
 import org.folio.rest.jaxrs.model.EventEntries;
 import org.folio.rest.jaxrs.model.EventResponse;
-import org.folio.rest.persist.Criteria.Criteria;
-import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.folio.services.StorageService;
+import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
+import org.z3950.zing.cql.cql2pgjson.FieldException;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class StorageServiceImpl implements StorageService {
   private static final String ERROR_MESSAGE_STORAGE_SERVICE = "Error while %s | message: %s";
   private static final String SUCCESSFUL_MESSAGE_DELETE_EVENT = "Configuration with id: '%s' was successfully deleted";
   private static final String EVENT_CONFIG_TABLE_NAME = "event_configurations";
-  private static final String EVENT_CONFIG_CRITERIA_ID = "'id'";
+  private static final String EVENT_CONFIG_CRITERIA_ID = "id==%s";
   private static final String EVENT_CONFIG_ID = "id";
 
   private final Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
@@ -67,8 +67,8 @@ public class StorageServiceImpl implements StorageService {
     try {
       eventEntity.put(EVENT_CONFIG_ID, id);
       EventEntity eventConfig = eventEntity.mapTo(EventEntity.class);
-      Criteria idCriteria = getCriteriaByVal(id);
-      PostgresClient.getInstance(vertx, tenantId).update(EVENT_CONFIG_TABLE_NAME, eventConfig, new Criterion(idCriteria), true, updateReply -> {
+      CQLWrapper cqlFilter = getCqlWrapper(id);
+      PostgresClient.getInstance(vertx, tenantId).update(EVENT_CONFIG_TABLE_NAME, eventConfig, cqlFilter, true, updateReply -> {
         if (updateReply.failed()) {
           String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "updating the event configuration to the db", updateReply.cause().getMessage());
           logger.error(errorMessage);
@@ -140,8 +140,8 @@ public class StorageServiceImpl implements StorageService {
   @Override
   public StorageService deleteEventConfigById(String tenantId, String id, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
-      Criteria idCriteria = getCriteriaByVal(id);
-      PostgresClient.getInstance(vertx, tenantId).delete(EVENT_CONFIG_TABLE_NAME, new Criterion(idCriteria), deleteReply -> {
+      CQLWrapper cqlFilter = getCqlWrapper(id);
+      PostgresClient.getInstance(vertx, tenantId).delete(EVENT_CONFIG_TABLE_NAME, cqlFilter, deleteReply -> {
         if (deleteReply.failed()) {
           String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "deleting the event configuration to the db", deleteReply.cause().getMessage());
           logger.error(errorMessage);
@@ -167,15 +167,13 @@ public class StorageServiceImpl implements StorageService {
   }
 
   /**
-   * Builds criteria by which db result is filtered
+   * Builds criteria wrapper
    *
    * @param value - value corresponding to the key
-   * @return - Criteria object
+   * @return - CQLWrapper object
    */
-  private Criteria getCriteriaByVal(String value) {
-    return new Criteria()
-      .addField(EVENT_CONFIG_CRITERIA_ID)
-      .setOperation("=")
-      .setValue(value);
+  private CQLWrapper getCqlWrapper(String value) throws FieldException {
+    CQL2PgJSON cql2PgJSON = new CQL2PgJSON(EVENT_CONFIG_TABLE_NAME + ".jsonb");
+    return new CQLWrapper(cql2PgJSON, String.format(EVENT_CONFIG_CRITERIA_ID, value));
   }
 }
