@@ -3,17 +3,12 @@
   "description": "Event response",
   "type": "object",
   "properties": {
-    "id": {
-      "description": "identifier",
-      "type": "string"
-    },
-    "name": {
-      "description": "configuration name",
+    "message": {
+      "description": "response message",
       "type": "string"
     }
   },
   "required": [
-    "name",
-    "id"
+    "message"
   ]
 }

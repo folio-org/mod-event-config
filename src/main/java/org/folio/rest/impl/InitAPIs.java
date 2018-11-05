@@ -3,9 +3,13 @@ package org.folio.rest.impl;
 import io.vertx.core.*;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.serviceproxy.ServiceBinder;
 import org.folio.rest.resource.interfaces.InitAPI;
+import org.folio.services.StorageService;
 
 import java.lang.management.ManagementFactory;
+
+import static org.folio.util.EventConfigUtils.EVENT_CONFIG_PROXY_ADDRESS;
 
 /**
  * Performs preprocessing operations before the verticle is deployed,
@@ -19,6 +23,10 @@ public class InitAPIs implements InitAPI {
   public void init(Vertx vertx, Context context, Handler<AsyncResult<Boolean>> handler) {
     final int port = Integer.parseInt(System.getProperty("port", "8080"));
     logger.info(ManagementFactory.getRuntimeMXBean().getName() + " on port " + port);
+    new ServiceBinder(vertx)
+      .setAddress(EVENT_CONFIG_PROXY_ADDRESS)
+      .register(StorageService.class, StorageService.create(vertx));
+
     handler.handle(Future.succeededFuture(true));
   }
 }

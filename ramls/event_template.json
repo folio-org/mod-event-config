@@ -7,6 +7,10 @@
       "description": "template identifier",
       "type": "string"
     },
+    "outputFormat": {
+      "description": "template format",
+      "type": "string"
+    },
     "deliveryChannel": {
       "description": "delivery channel",
       "type": "string"
@@ -15,6 +19,7 @@
   "additionalProperties": false,
   "required": [
     "templateId",
+    "outputFormat",
     "deliveryChannel"
   ]
 }
