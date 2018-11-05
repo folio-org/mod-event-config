@@ -19,6 +19,7 @@ import org.apache.http.HttpStatus;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.EventEntries;
+import org.folio.rest.jaxrs.model.Template;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.NetworkUtils;
@@ -185,6 +186,43 @@ public class EventConfigAPIsTest {
   }
 
   @Test
+  public void testPostHtmlEventConfig() {
+    JsonArray templates = createTemplates("email", "text/html");
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "test", true, templates);
+
+    // create a new event config
+    Response response = requestPostEventConfig(expectedEntity)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract()
+      .response();
+
+    JsonObject actualEntity = new JsonObject(response.getBody().print());
+    String actualId = actualEntity.getString("id");
+    expectedEntity.put("id", actualId);
+    assertEquals(expectedEntity, actualEntity);
+  }
+
+  @Test
+  public void testPostTextEventConfig() {
+    JsonArray templates = createTemplates("sms", "text/plain");
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "test", true, templates);
+
+    // create a new event config
+    Response response = requestPostEventConfig(expectedEntity)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract()
+      .response();
+
+    String expected = new JsonObject(response.getBody().print())
+      .getJsonArray("templates")
+      .getJsonObject(0)
+      .getString("outputFormat");
+    assertEquals(expected, "text/plain");
+  }
+
+  @Test
   public void testGetEventEntries() {
     EventEntries eventEntries = new EventEntries().withTotalRecords(0);
     JsonObject expectedEntriesJson = JsonObject.mapFrom(eventEntries);
@@ -302,5 +340,13 @@ public class EventConfigAPIsTest {
 
   private String getResponseMessage(Response response) {
     return new JsonObject(response.getBody().print()).getString(RESPONSE_KEY);
+  }
+
+  private JsonArray createTemplates(String deliveryChannel, String outputFormat) {
+    Template template = new Template()
+      .withTemplateId(UUID.randomUUID().toString())
+      .withDeliveryChannel(deliveryChannel)
+      .withOutputFormat(outputFormat);
+    return new JsonArray().add(JsonObject.mapFrom(template));
   }
 }
