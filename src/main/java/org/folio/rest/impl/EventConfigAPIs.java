@@ -116,7 +116,7 @@ public class EventConfigAPIs implements EventConfig {
           String message = String.format(ERROR_EVENT_CONFIG_NOT_FOUND, id);
           logger.debug(message);
           EventResponse eventResponse = new EventResponse().withMessage(message);
-          asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond400WithApplicationJson(eventResponse)));
+          asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond404WithApplicationJson(eventResponse)));
           return;
         }
 

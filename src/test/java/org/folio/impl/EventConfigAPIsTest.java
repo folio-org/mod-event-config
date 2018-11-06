@@ -262,7 +262,7 @@ public class EventConfigAPIsTest {
     String id = UUID.randomUUID().toString();
     Response response = requestGetEventById(id)
       .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .statusCode(HttpStatus.SC_NOT_FOUND)
       .extract()
       .response();
 
