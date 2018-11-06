@@ -68,7 +68,7 @@ public class EventConfigAPIsTest {
     // create a new event config
     requestPostEventConfig(expectedEntity)
       .then()
-      .statusCode(HttpStatus.SC_OK);
+      .statusCode(HttpStatus.SC_CREATED);
 
     // get the event config by id
     Response responseGetEvent = requestGetEventById(id)
@@ -106,7 +106,7 @@ public class EventConfigAPIsTest {
     // check that the event config has been deleted
     requestGetEventById(id)
       .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+      .statusCode(HttpStatus.SC_NOT_FOUND);
   }
 
   @Test
@@ -116,7 +116,7 @@ public class EventConfigAPIsTest {
 
     Response response = requestPostEventConfig(expectedEntity)
       .then()
-      .statusCode(HttpStatus.SC_OK)
+      .statusCode(HttpStatus.SC_CREATED)
       .extract()
       .response();
 
@@ -133,7 +133,7 @@ public class EventConfigAPIsTest {
     String id = UUID.randomUUID().toString();
     requestGetEventById(id)
       .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST);
+      .statusCode(HttpStatus.SC_NOT_FOUND);
   }
 
   @Test
