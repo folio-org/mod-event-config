@@ -36,7 +36,7 @@ public class EventConfigAPIs implements EventConfig {
   @Override
   public void postEventConfig(EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
     EventEntity eventEntity = service.save(entity);
-    asyncHandler.handle(createFutureResponse(PostEventConfigResponse.respond200WithApplicationJson(eventEntity)));
+    asyncHandler.handle(createFutureResponse(PostEventConfigResponse.respond201WithApplicationJson(eventEntity)));
   }
 
   /**
@@ -50,7 +50,7 @@ public class EventConfigAPIs implements EventConfig {
     EventEntity eventEntity = service.findById(id);
     if (Objects.isNull(eventEntity)) {
       logger.error(EVENT_ENTITY_NOT_FOUND);
-      asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond400WithTextPlain(EVENT_ENTITY_NOT_FOUND)));
+      asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond404WithTextPlain(EVENT_ENTITY_NOT_FOUND)));
       return;
     }
     asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond200WithApplicationJson(eventEntity)));
