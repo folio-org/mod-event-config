@@ -23,7 +23,11 @@ import org.folio.rest.jaxrs.model.Template;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.NetworkUtils;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 
@@ -63,7 +67,9 @@ public class EventConfigAPIsTest {
     Async async = context.async();
     vertx = Vertx.vertx();
     int port = NetworkUtils.nextFreePort();
-    Headers headers = new Headers(new Header(OKAPI_HEADER_TENANT, TENANT_ID), new Header(OKAPI_HEADER_TOKEN, OKAPI_TOKEN_VAL));
+    Headers headers = new Headers(
+      new Header(OKAPI_HEADER_TENANT, TENANT_ID),
+      new Header(OKAPI_HEADER_TOKEN, OKAPI_TOKEN_VAL));
     restPath = System.getProperty("org.folio.event.config.rest.path", "/eventConfig");
     useExternalDatabase = System.getProperty("org.folio.event.config.test.database", EXTERNAL_DATABASE_VAL);
     request = RestAssured.given()

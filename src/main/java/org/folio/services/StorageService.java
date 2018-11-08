@@ -39,7 +39,8 @@ public interface StorageService {
    * @return EventEntity
    */
   @Fluent
-  StorageService createEventConfig(String tenantId, JsonObject eventEntity, Handler<AsyncResult<JsonObject>> asyncResultHandler);
+  StorageService createEventConfig(String tenantId, JsonObject eventEntity,
+                                   Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**
    * Update the entity {@link EventEntity} by id
@@ -49,7 +50,8 @@ public interface StorageService {
    * @return asyncResult with the entity {@link EventEntity}
    */
   @Fluent
-  StorageService updateEventConfig(String tenantId, String id, JsonObject eventEntity, Handler<AsyncResult<JsonObject>> asyncResultHandler);
+  StorageService updateEventConfig(String tenantId, String id, JsonObject eventEntity,
+                                   Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**
    * Find the entity {@link EventEntity} by id
@@ -58,7 +60,8 @@ public interface StorageService {
    * @return asyncResult with the entity {@link EventEntity}
    */
   @Fluent
-  StorageService findEventConfigById(String tenantId, String id, Handler<AsyncResult<JsonObject>> asyncResultHandler);
+  StorageService findEventConfigById(String tenantId, String id,
+                                     Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**
    * Find all entries
@@ -66,7 +69,8 @@ public interface StorageService {
    * @return asyncResult with the entity {@link EventEntries}
    */
   @Fluent
-  StorageService findAllEventConfigurations(String tenantId, Handler<AsyncResult<JsonObject>> asyncResultHandler);
+  StorageService findAllEventConfigurations(String tenantId,
+                                            Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**
    * Delete the entity {@link EventEntity} by id
@@ -75,5 +79,6 @@ public interface StorageService {
    * @return asyncResult with the entity {@link EventResponse}
    */
   @Fluent
-  StorageService deleteEventConfigById(String tenantId, String id, Handler<AsyncResult<JsonObject>> asyncResultHandler);
+  StorageService deleteEventConfigById(String tenantId, String id,
+                                       Handler<AsyncResult<JsonObject>> asyncResultHandler);
 }

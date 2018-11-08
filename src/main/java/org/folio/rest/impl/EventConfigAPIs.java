@@ -47,10 +47,12 @@ public class EventConfigAPIs implements EventConfig {
    * Create new event config
    *
    * @param entity       the event configuration {@link EventEntity}
-   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler}
+   *                     which must be called as follows in the final callback (most internal callback) of the function
    */
   @Override
-  public void postEventConfig(EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
+  public void postEventConfig(EventEntity entity, Map<String, String> headers,
+                              Handler<AsyncResult<Response>> asyncHandler, Context context) {
     try {
       List<Template> templates = entity.getTemplates();
       templates.forEach(template -> template.setOutputFormat(findOutputFormat(template)));
@@ -75,10 +77,12 @@ public class EventConfigAPIs implements EventConfig {
   /**
    * Get all event configs
    *
-   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler}
+   *                     which must be called as follows in the final callback (most internal callback) of the function
    */
   @Override
-  public void getEventConfig(Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncHandler, Context context) {
+  public void getEventConfig(Map<String, String> okapiHeaders,
+                             Handler<AsyncResult<Response>> asyncHandler, Context context) {
     try {
       context.runOnContext(contextHandler -> service.findAllEventConfigurations(tenantId, serviceHandler -> {
         if (serviceHandler.failed()) {
@@ -88,7 +92,8 @@ public class EventConfigAPIs implements EventConfig {
         }
 
         EventEntries responseEntries = getResponseEntity(serviceHandler, EventEntries.class);
-        asyncHandler.handle(createFutureResponse(GetEventConfigResponse.respond200WithApplicationJson(responseEntries)));
+        asyncHandler.handle(createFutureResponse(
+          GetEventConfigResponse.respond200WithApplicationJson(responseEntries)));
       }));
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_RUNNING_VERTICLE, "findAllEventConfigurations", ex.getMessage());
@@ -101,10 +106,12 @@ public class EventConfigAPIs implements EventConfig {
    * Get event config by id
    *
    * @param id           the configuration event ID
-   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler}
+   *                     which must be called as follows in the final callback (most internal callback) of the function
    */
   @Override
-  public void getEventConfigById(String id, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
+  public void getEventConfigById(String id, Map<String, String> headers,
+                                 Handler<AsyncResult<Response>> asyncHandler, Context context) {
     try {
       context.runOnContext(contextHandler -> service.findEventConfigById(tenantId, id, serviceHandler -> {
         if (serviceHandler.failed()) {
@@ -116,7 +123,8 @@ public class EventConfigAPIs implements EventConfig {
           String message = String.format(ERROR_EVENT_CONFIG_NOT_FOUND, id);
           logger.debug(message);
           EventResponse eventResponse = new EventResponse().withMessage(message);
-          asyncHandler.handle(createFutureResponse(GetEventConfigByIdResponse.respond404WithApplicationJson(eventResponse)));
+          asyncHandler.handle(createFutureResponse(
+            GetEventConfigByIdResponse.respond404WithApplicationJson(eventResponse)));
           return;
         }
 
@@ -135,10 +143,12 @@ public class EventConfigAPIs implements EventConfig {
    *
    * @param id           the configuration event ID
    * @param entity       the event configuration {@link EventEntity}
-   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler}
+   *                     which must be called as follows in the final callback (most internal callback) of the function
    */
   @Override
-  public void putEventConfigById(String id, EventEntity entity, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
+  public void putEventConfigById(String id, EventEntity entity, Map<String, String> headers,
+                                 Handler<AsyncResult<Response>> asyncHandler, Context context) {
     try {
       final JsonObject entityJson = JsonObject.mapFrom(entity);
       context.runOnContext(contextHandler -> service.updateEventConfig(tenantId, id, entityJson, serviceHandler -> {
@@ -151,12 +161,14 @@ public class EventConfigAPIs implements EventConfig {
           String message = String.format(ERROR_EVENT_CONFIG_NOT_FOUND, id);
           logger.debug(message);
           EventResponse eventResponse = new EventResponse().withMessage(message);
-          asyncHandler.handle(createFutureResponse(PutEventConfigByIdResponse.respond400WithApplicationJson(eventResponse)));
+          asyncHandler.handle(createFutureResponse(
+            PutEventConfigByIdResponse.respond400WithApplicationJson(eventResponse)));
           return;
         }
 
         EventEntity eventEntity = getResponseEntity(serviceHandler, EventEntity.class);
-        asyncHandler.handle(createFutureResponse(PutEventConfigByIdResponse.respond200WithApplicationJson(eventEntity)));
+        asyncHandler.handle(createFutureResponse(
+          PutEventConfigByIdResponse.respond200WithApplicationJson(eventEntity)));
       }));
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_RUNNING_VERTICLE, "updateEventConfig", ex.getMessage());
@@ -169,28 +181,33 @@ public class EventConfigAPIs implements EventConfig {
    * Delete event config
    *
    * @param id           the configuration event ID
-   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler} which must be called as follows in the final callback (most internal callback) of the function
+   * @param asyncHandler an AsyncResult<Response> Handler {@link Handler}
+   *                     which must be called as follows in the final callback (most internal callback) of the function
    */
   @Override
-  public void deleteEventConfigById(String id, Map<String, String> headers, Handler<AsyncResult<Response>> asyncHandler, Context context) {
+  public void deleteEventConfigById(String id, Map<String, String> headers,
+                                    Handler<AsyncResult<Response>> asyncHandler, Context context) {
     try {
       context.runOnContext(contextHandler -> service.deleteEventConfigById(tenantId, id, serviceHandler ->
         {
           if (serviceHandler.failed()) {
             String errorMessage = serviceHandler.cause().getMessage();
-            asyncHandler.handle(createFutureResponse(DeleteEventConfigByIdResponse.respond500WithTextPlain(errorMessage)));
+            asyncHandler.handle(createFutureResponse(
+              DeleteEventConfigByIdResponse.respond500WithTextPlain(errorMessage)));
             return;
           }
           if (Objects.isNull(serviceHandler.result())) {
             String message = String.format(ERROR_EVENT_CONFIG_NOT_FOUND, id);
             logger.debug(message);
             EventResponse eventResponse = new EventResponse().withMessage(message);
-            asyncHandler.handle(createFutureResponse(DeleteEventConfigByIdResponse.respond400WithApplicationJson(eventResponse)));
+            asyncHandler.handle(createFutureResponse(
+              DeleteEventConfigByIdResponse.respond400WithApplicationJson(eventResponse)));
             return;
           }
 
           EventResponse eventResponse = getResponseEntity(serviceHandler, EventResponse.class);
-          asyncHandler.handle(createFutureResponse(DeleteEventConfigByIdResponse.respond200WithApplicationJson(eventResponse)));
+          asyncHandler.handle(createFutureResponse(
+            DeleteEventConfigByIdResponse.respond200WithApplicationJson(eventResponse)));
         }
       ));
     } catch (Exception ex) {

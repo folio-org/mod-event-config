@@ -40,22 +40,26 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public StorageService createEventConfig(String tenantId, JsonObject eventEntity, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
+  public StorageService createEventConfig(String tenantId, JsonObject eventEntity,
+                                          Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
       String id = UUID.randomUUID().toString();
       eventEntity.put(EVENT_CONFIG_ID, id);
       EventEntity eventConfig = eventEntity.mapTo(EventEntity.class);
-      PostgresClient.getInstance(vertx, tenantId).save(EVENT_CONFIG_TABLE_NAME, id, eventConfig, postReply -> {
-        if (postReply.failed()) {
-          String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "saving the event configuration to the db", postReply.cause().getMessage());
-          logger.error(errorMessage);
-          asyncResultHandler.handle(Future.failedFuture(postReply.cause()));
-          return;
-        }
-        asyncResultHandler.handle(Future.succeededFuture(eventEntity));
-      });
+      PostgresClient.getInstance(vertx, tenantId).save(EVENT_CONFIG_TABLE_NAME, id, eventConfig,
+        postReply -> {
+          if (postReply.failed()) {
+            String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+              "saving the event configuration to the db", postReply.cause().getMessage());
+            logger.error(errorMessage);
+            asyncResultHandler.handle(Future.failedFuture(postReply.cause()));
+            return;
+          }
+          asyncResultHandler.handle(Future.succeededFuture(eventEntity));
+        });
     } catch (Exception ex) {
-      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "creating new event configuration", ex.getMessage());
+      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+        "creating new event configuration", ex.getMessage());
       logger.error(errorMessage);
       asyncResultHandler.handle(Future.failedFuture(errorMessage));
     }
@@ -63,27 +67,32 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public StorageService updateEventConfig(String tenantId, String id, JsonObject eventEntity, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
+  public StorageService updateEventConfig(String tenantId, String id, JsonObject eventEntity,
+                                          Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
       eventEntity.put(EVENT_CONFIG_ID, id);
       EventEntity eventConfig = eventEntity.mapTo(EventEntity.class);
       CQLWrapper cqlFilter = getCqlWrapper(id);
-      PostgresClient.getInstance(vertx, tenantId).update(EVENT_CONFIG_TABLE_NAME, eventConfig, cqlFilter, true, updateReply -> {
-        if (updateReply.failed()) {
-          String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "updating the event configuration to the db", updateReply.cause().getMessage());
-          logger.error(errorMessage);
-          asyncResultHandler.handle(Future.failedFuture(updateReply.cause()));
-          return;
-        }
-        int resultCode = updateReply.result().getUpdated();
-        if (resultCode == 0) {
-          asyncResultHandler.handle(Future.succeededFuture(null));
-          return;
-        }
-        asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventConfig)));
-      });
+      PostgresClient.getInstance(vertx, tenantId)
+        .update(EVENT_CONFIG_TABLE_NAME, eventConfig, cqlFilter, true,
+          updateReply -> {
+            if (updateReply.failed()) {
+              String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+                "updating the event configuration to the db", updateReply.cause().getMessage());
+              logger.error(errorMessage);
+              asyncResultHandler.handle(Future.failedFuture(updateReply.cause()));
+              return;
+            }
+            int resultCode = updateReply.result().getUpdated();
+            if (resultCode == 0) {
+              asyncResultHandler.handle(Future.succeededFuture(null));
+              return;
+            }
+            asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventConfig)));
+          });
     } catch (Exception ex) {
-      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "updating event configuration", ex.getMessage());
+      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+        "updating event configuration", ex.getMessage());
       logger.error(errorMessage);
       asyncResultHandler.handle(Future.failedFuture(errorMessage));
     }
@@ -91,16 +100,19 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public StorageService findEventConfigById(String tenantId, String id, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
+  public StorageService findEventConfigById(String tenantId, String id,
+                                            Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
-      PostgresClient.getInstance(vertx, tenantId).getById(EVENT_CONFIG_TABLE_NAME, id, EventEntity.class, getReply -> {
-        if (getReply.failed() || Objects.isNull(getReply.result())) {
-          asyncResultHandler.handle(Future.succeededFuture(null));
-          return;
-        }
-        EventEntity eventEntity = getReply.result();
-        asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntity)));
-      });
+      PostgresClient.getInstance(vertx, tenantId)
+        .getById(EVENT_CONFIG_TABLE_NAME, id, EventEntity.class,
+          getReply -> {
+            if (getReply.failed() || Objects.isNull(getReply.result())) {
+              asyncResultHandler.handle(Future.succeededFuture(null));
+              return;
+            }
+            EventEntity eventEntity = getReply.result();
+            asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntity)));
+          });
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "find the event by id", ex.getMessage());
       logger.error(errorMessage);
@@ -113,24 +125,28 @@ public class StorageServiceImpl implements StorageService {
   public StorageService findAllEventConfigurations(String tenantId, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
       String[] fieldList = {"*"};
-      PostgresClient.getInstance(vertx, tenantId).get(EVENT_CONFIG_TABLE_NAME, EventEntity.class, fieldList, new CQLWrapper(), true, false, getReply -> {
-        if (getReply.failed()) {
-          String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "querying the db to get all event configurations", getReply.cause().getMessage());
-          logger.error(errorMessage);
-          asyncResultHandler.handle(Future.failedFuture(getReply.cause()));
-          return;
-        }
-        Results<EventEntity> result = getReply.result();
-        Integer totalRecords = result.getResultInfo().getTotalRecords();
-        EventEntries eventEntries = new EventEntries()
-          .withEventEntity(result.getResults())
-          .withTotalRecords(totalRecords);
+      PostgresClient.getInstance(vertx, tenantId)
+        .get(EVENT_CONFIG_TABLE_NAME, EventEntity.class, fieldList, new CQLWrapper(), true, false,
+          getReply -> {
+            if (getReply.failed()) {
+              String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+                "querying the db to get all event configurations", getReply.cause().getMessage());
+              logger.error(errorMessage);
+              asyncResultHandler.handle(Future.failedFuture(getReply.cause()));
+              return;
+            }
+            Results<EventEntity> result = getReply.result();
+            Integer totalRecords = result.getResultInfo().getTotalRecords();
+            EventEntries eventEntries = new EventEntries()
+              .withEventEntity(result.getResults())
+              .withTotalRecords(totalRecords);
 
-        JsonObject entries = JsonObject.mapFrom(eventEntries);
-        asyncResultHandler.handle(Future.succeededFuture(entries));
-      });
+            JsonObject entries = JsonObject.mapFrom(eventEntries);
+            asyncResultHandler.handle(Future.succeededFuture(entries));
+          });
     } catch (Exception ex) {
-      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "find all event configurations", ex.getMessage());
+      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+        "find all event configurations", ex.getMessage());
       logger.error(errorMessage);
       asyncResultHandler.handle(Future.failedFuture(errorMessage));
     }
@@ -138,27 +154,33 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public StorageService deleteEventConfigById(String tenantId, String id, Handler<AsyncResult<JsonObject>> asyncResultHandler) {
+  public StorageService deleteEventConfigById(String tenantId, String id,
+                                              Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
       CQLWrapper cqlFilter = getCqlWrapper(id);
-      PostgresClient.getInstance(vertx, tenantId).delete(EVENT_CONFIG_TABLE_NAME, cqlFilter, deleteReply -> {
-        if (deleteReply.failed()) {
-          String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "deleting the event configuration to the db", deleteReply.cause().getMessage());
-          logger.error(errorMessage);
-          asyncResultHandler.handle(Future.failedFuture(deleteReply.cause()));
-          return;
-        }
-        int resultCode = deleteReply.result().getUpdated();
-        if (resultCode == 0) {
-          asyncResultHandler.handle(Future.succeededFuture(null));
-          return;
-        }
-        EventResponse eventResponse = new EventResponse().withMessage(String.format(SUCCESSFUL_MESSAGE_DELETE_EVENT, id));
-        JsonObject eventResponseJson = JsonObject.mapFrom(eventResponse);
-        asyncResultHandler.handle(Future.succeededFuture(eventResponseJson));
-      });
+      PostgresClient.getInstance(vertx, tenantId)
+        .delete(EVENT_CONFIG_TABLE_NAME, cqlFilter,
+          deleteReply -> {
+            if (deleteReply.failed()) {
+              String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+                "deleting the event configuration to the db", deleteReply.cause().getMessage());
+              logger.error(errorMessage);
+              asyncResultHandler.handle(Future.failedFuture(deleteReply.cause()));
+              return;
+            }
+            int resultCode = deleteReply.result().getUpdated();
+            if (resultCode == 0) {
+              asyncResultHandler.handle(Future.succeededFuture(null));
+              return;
+            }
+            EventResponse eventResponse = new EventResponse()
+              .withMessage(String.format(SUCCESSFUL_MESSAGE_DELETE_EVENT, id));
+            JsonObject eventResponseJson = JsonObject.mapFrom(eventResponse);
+            asyncResultHandler.handle(Future.succeededFuture(eventResponseJson));
+          });
     } catch (Exception ex) {
-      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "deleting event configuration", ex.getMessage());
+      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
+        "deleting event configuration", ex.getMessage());
       logger.error(errorMessage);
       asyncResultHandler.handle(Future.failedFuture(errorMessage));
 
