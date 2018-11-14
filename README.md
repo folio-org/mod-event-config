@@ -22,12 +22,13 @@ The event configuration describes the event name, delivery channels, and contain
 
 Module provides next API:
 
- | METHOD |  URL                          | DESCRIPTION                                                       |
- |--------|-------------------------------|-------------------------------------------------------------------|
- | POST   | /eventConfig                  | Create new event config in storage                                |
- | GET    | /eventConfig/id               | Get event config from storage                                     |
- | PUT    | /eventConfig/id               | Update event config in storage                                    |
- | DELETE | /eventConfig/id               | Delete event config from storage                                  |
+  | METHOD |  URL                          | DESCRIPTION                                                       |
+  |--------|-------------------------------|-------------------------------------------------------------------|
+  | POST   | /eventConfig                  | Create new event config in storage                                |
+  | GET    | /eventConfig                  | Get all event configs or accepted by query                        |
+  | GET    | /eventConfig/{id}             | Get event config from storage                                     |
+  | PUT    | /eventConfig/{id}             | Update event config in storage                                    |
+  | DELETE | /eventConfig/{id}             | Delete event config from storage                                  |
 
 ## Compiling
 
