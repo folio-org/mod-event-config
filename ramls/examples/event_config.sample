@@ -5,10 +5,12 @@
   "templates":[
       {
         "deliveryChannel":"email",
+        "outputFormat":"text/html",
         "templateId":"1"
       },
       {
         "deliveryChannel":"sms",
+        "outputFormat":"text/plain",
         "templateId":"2"
       }
   ],

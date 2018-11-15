@@ -17,7 +17,7 @@ import org.folio.services.StorageService;
 import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
 import org.z3950.zing.cql.cql2pgjson.FieldException;
 
-import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -103,16 +103,20 @@ public class StorageServiceImpl implements StorageService {
   public StorageService findEventConfigById(String tenantId, String id,
                                             Handler<AsyncResult<JsonObject>> asyncResultHandler) {
     try {
-      PostgresClient.getInstance(vertx, tenantId)
-        .getById(EVENT_CONFIG_TABLE_NAME, id, EventEntity.class,
-          getReply -> {
-            if (getReply.failed() || Objects.isNull(getReply.result())) {
-              asyncResultHandler.handle(Future.succeededFuture(null));
-              return;
-            }
-            EventEntity eventEntity = getReply.result();
-            asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntity)));
-          });
+      CQLWrapper cqlFilter = getCqlWrapper(id);
+      PostgresClient.getInstance(vertx, tenantId).get(EVENT_CONFIG_TABLE_NAME, EventEntity.class, cqlFilter,
+        true, getReply -> {
+          if (getReply.failed()) {
+            asyncResultHandler.handle(Future.succeededFuture(null));
+            return;
+          }
+          Optional<EventEntity> eventEntityOpt = getReply.result().getResults().stream().findFirst();
+          if (!eventEntityOpt.isPresent()) {
+            asyncResultHandler.handle(Future.succeededFuture(null));
+            return;
+          }
+          asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntityOpt.get())));
+        });
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "find the event by id", ex.getMessage());
       logger.error(errorMessage);
@@ -133,16 +137,16 @@ public class StorageServiceImpl implements StorageService {
                 "querying the db to get all event configurations", getReply.cause().getMessage());
               logger.error(errorMessage);
               asyncResultHandler.handle(Future.failedFuture(getReply.cause()));
-              return;
-            }
-            Results<EventEntity> result = getReply.result();
-            Integer totalRecords = result.getResultInfo().getTotalRecords();
-            EventEntries eventEntries = new EventEntries()
-              .withEventEntity(result.getResults())
-              .withTotalRecords(totalRecords);
+            } else {
+              Results<EventEntity> result = getReply.result();
+              Integer totalRecords = result.getResultInfo().getTotalRecords();
+              EventEntries eventEntries = new EventEntries()
+                .withEventEntity(result.getResults())
+                .withTotalRecords(totalRecords);
 
-            JsonObject entries = JsonObject.mapFrom(eventEntries);
-            asyncResultHandler.handle(Future.succeededFuture(entries));
+              JsonObject entries = JsonObject.mapFrom(eventEntries);
+              asyncResultHandler.handle(Future.succeededFuture(entries));
+            }
           });
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE,
