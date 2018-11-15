@@ -8,7 +8,7 @@
       "type": "string"
     },
     "outputFormat": {
-      "description": "template format",
+      "description": "format type: `text/html` or `text/plain`",
       "type": "string"
     },
     "deliveryChannel": {
