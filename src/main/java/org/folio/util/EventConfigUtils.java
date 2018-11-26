@@ -11,6 +11,9 @@ public class EventConfigUtils {
 
   public static final String EVENT_CONFIG_PROXY_ADDRESS = "event-config-service.queue";
 
+  public static final String VALUE_IS_NOT_FOUND = "isNotFound";
+  public static final JsonObject EMPTY_JSON_OBJECT = new JsonObject().put(VALUE_IS_NOT_FOUND, true);
+
   private EventConfigUtils() {
     //not called
   }
