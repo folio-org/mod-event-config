@@ -116,3 +116,23 @@ traits:
           body:
             text/plain:
               example: "Internal server error"
+  /name:
+    /{name}:
+      get:
+         description: Get event config by name
+         responses:
+           200:
+             description: "success"
+             body:
+               application/json:
+                 schema: eventEntity
+           404:
+             description: "Not found"
+             body:
+               application/json:
+                 schema: eventResponse
+           500:
+             description: "Internal server error"
+             body:
+               text/plain:
+                 example: "Internal server error"

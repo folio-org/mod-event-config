@@ -20,6 +20,8 @@ import org.z3950.zing.cql.cql2pgjson.FieldException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.folio.util.EventConfigUtils.EMPTY_JSON_OBJECT;
+
 /**
  * Implementation of StorageService,
  * calls PostgresClient to perform CRUD operations on EventConfig entity
@@ -30,6 +32,7 @@ public class StorageServiceImpl implements StorageService {
   private static final String SUCCESSFUL_MESSAGE_DELETE_EVENT = "Configuration with id: '%s' was successfully deleted";
   private static final String EVENT_CONFIG_TABLE_NAME = "event_configurations";
   private static final String EVENT_CONFIG_CRITERIA_ID = "id==%s";
+  private static final String EVENT_CONFIG_CRITERIA_NAME = "name==%s";
   private static final String EVENT_CONFIG_ID = "id";
 
   private final Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
@@ -107,18 +110,46 @@ public class StorageServiceImpl implements StorageService {
       PostgresClient.getInstance(vertx, tenantId).get(EVENT_CONFIG_TABLE_NAME, EventEntity.class, cqlFilter,
         true, getReply -> {
           if (getReply.failed()) {
-            asyncResultHandler.handle(Future.succeededFuture(null));
+            asyncResultHandler.handle(Future.failedFuture(getReply.cause()));
             return;
           }
           Optional<EventEntity> eventEntityOpt = getReply.result().getResults().stream().findFirst();
           if (!eventEntityOpt.isPresent()) {
-            asyncResultHandler.handle(Future.succeededFuture(null));
+            asyncResultHandler.handle(Future.succeededFuture(EMPTY_JSON_OBJECT));
             return;
           }
           asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntityOpt.get())));
         });
     } catch (Exception ex) {
       String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "find the event by id", ex.getMessage());
+      logger.error(errorMessage);
+      asyncResultHandler.handle(Future.failedFuture(errorMessage));
+    }
+    return this;
+  }
+
+  @Override
+  public StorageService findEventConfigByName(String tenantId, String name,
+                                              Handler<AsyncResult<JsonObject>> asyncResultHandler) {
+    try {
+      CQL2PgJSON cql2PgJSON = new CQL2PgJSON(EVENT_CONFIG_TABLE_NAME + ".jsonb");
+      CQLWrapper cqlFilter = new CQLWrapper(cql2PgJSON, String.format(EVENT_CONFIG_CRITERIA_NAME, name));
+      PostgresClient.getInstance(vertx, tenantId).get(EVENT_CONFIG_TABLE_NAME, EventEntity.class, cqlFilter,
+        true, getReply -> {
+          if (getReply.failed()) {
+            asyncResultHandler.handle(Future.failedFuture(getReply.cause()));
+            return;
+          }
+          Optional<EventEntity> eventEntityOpt = getReply.result().getResults().stream().findFirst();
+          if (!eventEntityOpt.isPresent()) {
+            asyncResultHandler.handle(Future.succeededFuture(EMPTY_JSON_OBJECT));
+            return;
+          }
+
+          asyncResultHandler.handle(Future.succeededFuture(JsonObject.mapFrom(eventEntityOpt.get())));
+        });
+    } catch (Exception ex) {
+      String errorMessage = String.format(ERROR_MESSAGE_STORAGE_SERVICE, "find the event by name", ex.getMessage());
       logger.error(errorMessage);
       asyncResultHandler.handle(Future.failedFuture(errorMessage));
     }

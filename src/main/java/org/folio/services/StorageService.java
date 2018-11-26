@@ -64,6 +64,16 @@ public interface StorageService {
                                      Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**
+   * Find the entity {@link EventEntity} by name
+   *
+   * @param name name of event
+   * @return asyncResult with the entity {@link EventEntity}
+   */
+  @Fluent
+  StorageService findEventConfigByName(String tenantId, String name,
+                                     Handler<AsyncResult<JsonObject>> asyncResultHandler);
+
+  /**
    * Find all entries
    *
    * @return asyncResult with the entity {@link EventEntries}

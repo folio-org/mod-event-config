@@ -5,13 +5,25 @@
   "provides": [
     {
       "id": "mod-event",
-      "version": "1.0",
+      "version": "1.1",
       "handlers": [
         {
           "methods": [
             "GET"
           ],
           "pathPattern": "/eventConfig/{id}",
+          "permissionsRequired": [
+            "event.config.item.get"
+          ],
+          "modulePermissions": [
+            "notify.collection.get"
+          ]
+        },
+        {
+          "methods": [
+            "GET"
+          ],
+          "pathPattern": "/eventConfig/name/{name}",
           "permissionsRequired": [
             "event.config.item.get"
           ],

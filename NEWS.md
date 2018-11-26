@@ -1,3 +1,12 @@
+## 2018-11-26 v0.1.1
+ * Add endpoint GET: /eventConfig/name/ 
+ 
+ API: 
+   
+   | METHOD |  URL                          | DESCRIPTION                                                       |
+   |--------|-------------------------------|-------------------------------------------------------------------|
+   | GET    | /eventConfig/name/{name}      | Get event config by name from storage                             |
+
 ## 2018-11-02 v0.0.1
  * Add implementation `/eventConfig` which is accessible through OKAPI
  * Add endpoint GET: /eventConfig  

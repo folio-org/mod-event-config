@@ -9,7 +9,7 @@
       "pkColumnName": "_id",
       "uniqueIndex": [
         {
-          "fieldName": "eventId",
+          "fieldName": "name",
           "tOps": "ADD"
         }
       ],

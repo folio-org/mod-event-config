@@ -26,7 +26,8 @@ Module provides next API:
   |--------|-------------------------------|-------------------------------------------------------------------|
   | POST   | /eventConfig                  | Create new event config in storage                                |
   | GET    | /eventConfig                  | Get all event configs or accepted by query                        |
-  | GET    | /eventConfig/{id}             | Get event config from storage                                     |
+  | GET    | /eventConfig/{id}             | Get event config by id from storage                               |
+  | GET    | /eventConfig/name/{name}      | Get event config by name from storage                             |
   | PUT    | /eventConfig/{id}             | Update event config in storage                                    |
   | DELETE | /eventConfig/{id}             | Delete event config from storage                                  |
 
