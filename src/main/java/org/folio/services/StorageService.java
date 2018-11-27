@@ -69,7 +69,7 @@ public interface StorageService {
    * @return asyncResult with the entity {@link EventEntries}
    */
   @Fluent
-  StorageService findAllEventConfigurations(String tenantId,
+  StorageService findAllEventConfigurations(String tenantId, String query,
                                             Handler<AsyncResult<JsonObject>> asyncResultHandler);
 
   /**

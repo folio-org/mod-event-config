@@ -17,6 +17,12 @@ types:
 
 traits:
   validate: !include raml-util/traits/validation.raml
+  queryable:
+    queryParameters:
+      query:
+        description: "A query string to filter events based on matching criteria in fields."
+        required: false
+        type: string
 
 /eventConfig:
   post:
@@ -42,6 +48,9 @@ traits:
             example: "Internal server error"
   get:
     description: Get all event configs or accepted by query
+    is: [
+      queryable
+    ]
     responses:
       200:
         description: "success"
@@ -51,8 +60,8 @@ traits:
       400:
         description: "Bad request"
         body:
-          application/json:
-            schema: eventResponse
+          text/plain:
+            example: "Bad request"
       500:
         description: "Internal server error"
         body:

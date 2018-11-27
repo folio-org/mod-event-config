@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
 
@@ -56,6 +57,7 @@ public class EventConfigAPIsTest {
 
   private static String restPath;
   private static RequestSpecification request;
+  private static RequestSpecification requestGet;
   private static Vertx vertx;
   private static String useExternalDatabase;
 
@@ -73,6 +75,10 @@ public class EventConfigAPIsTest {
     restPath = System.getProperty("org.folio.event.config.rest.path", "/eventConfig");
     useExternalDatabase = System.getProperty("org.folio.event.config.test.database", EXTERNAL_DATABASE_VAL);
     request = RestAssured.given()
+      .port(port)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(headers);
+    requestGet = RestAssured.given()
       .port(port)
       .contentType(MediaType.APPLICATION_JSON)
       .headers(headers);
@@ -120,20 +126,23 @@ public class EventConfigAPIsTest {
     }));
   }
 
-
   @Before
   public void setUp(TestContext context) {
+    Async async = context.async();
     PostgresClient.getInstance(vertx, TENANT_ID).delete(SNAPSHOTS_TABLE_NAME, new Criterion(), event -> {
       if (event.failed()) {
         logger.error(event.cause());
         context.fail(event.cause());
+      } else {
+        async.complete();
       }
     });
   }
 
   @Test
   public void testFullRestAPI() {
-    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "test", true, new JsonArray());
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "RESET_PASSWORD",
+      true, new JsonArray());
 
     // create a new event config
     Response response = requestPostEventConfig(expectedEntity)
@@ -167,7 +176,7 @@ public class EventConfigAPIsTest {
   @Test
   public void testPostEventConfig() {
     String id = UUID.randomUUID().toString();
-    JsonObject expectedEntity = getJsonEntity(id, "test name", false, new JsonArray());
+    JsonObject expectedEntity = getJsonEntity(id, "RESET_PASSWORD", false, new JsonArray());
     String expectedDeleteMessage = "Configuration with id: '%s' was successfully deleted";
 
     // create a new event config
@@ -194,7 +203,8 @@ public class EventConfigAPIsTest {
   @Test
   public void testPostHtmlEventConfig() {
     JsonArray templates = createTemplates("email", "text/html");
-    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "test", true, templates);
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "new_pwd", true, templates);
+    expectedEntity.put("name", "NEW_PWD");
 
     // create a new event config
     Response response = requestPostEventConfig(expectedEntity)
@@ -245,10 +255,13 @@ public class EventConfigAPIsTest {
 
   @Test
   public void testGetAllEventEntries() {
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(10), false, new JsonArray()))
+    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(10),
+      false, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(20), false, new JsonArray()))
+
+    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(20),
+      true, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
 
@@ -279,7 +292,8 @@ public class EventConfigAPIsTest {
   @Test
   public void testPutEventConfigById() {
     String id = UUID.randomUUID().toString();
-    JsonObject entity = getJsonEntity("0002", RandomStringUtils.randomAlphabetic(20), true, new JsonArray());
+    JsonObject entity = getJsonEntity("0002", RandomStringUtils.randomAlphabetic(20),
+      true, new JsonArray());
 
     Response response = requestPutEventConfig(id, entity)
       .then()
@@ -302,6 +316,76 @@ public class EventConfigAPIsTest {
 
     String actualMessage = getResponseMessage(response);
     assertEquals(String.format(EXPECTED_ERROR_MESSAGE, id), actualMessage);
+  }
+
+  @Test
+  public void testUniqueNameOfConfiguration() {
+    String configName = "RESET_PASSWORD";
+    requestPostEventConfig(getJsonEntity(UUID.randomUUID().toString(), configName,
+      false, new JsonArray()))
+      .then()
+      .statusCode(HttpStatus.SC_CREATED);
+
+    Response response = requestPostEventConfig(getJsonEntity(UUID.randomUUID().toString(), configName,
+      false, new JsonArray()))
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .extract()
+      .response();
+    String body = response.getBody().print();
+    assertTrue(body.contains("duplicate key value violates unique constraint"));
+  }
+
+  @Test
+  public void testGetEventConfigByName() {
+    String configName = "CREATE_PASSWORD";
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), configName, true, new JsonArray());
+
+    String responseBody = requestPostEventConfig(expectedEntity)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract()
+      .response()
+      .getBody().print();
+    String actualId = new JsonObject(responseBody).getString("id");
+    expectedEntity.put("id", actualId);
+
+    requestPostEventConfig(getJsonEntity(UUID.randomUUID().toString(), "NEW", true, new JsonArray()))
+      .then()
+      .statusCode(HttpStatus.SC_CREATED);
+
+    Response response = requestGetEventByName(configName)
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .response();
+
+    JsonObject eventEntries = new JsonObject(response.getBody().print());
+    int totalRecords = eventEntries.getInteger("totalRecords");
+    assertEquals(1, totalRecords);
+    assertEquals(expectedEntity, eventEntries.getJsonArray("eventEntity").getJsonObject(0));
+  }
+
+  @Test
+  public void testGetEventConfigByIncorrectName() {
+    String configName = "password";
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), configName, true, new JsonArray());
+
+    requestPostEventConfig(expectedEntity)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract()
+      .response();
+
+    Response response = requestGetEventByName("INCORRECT")
+      .then()
+      .statusCode(HttpStatus.SC_OK)
+      .extract()
+      .response();
+
+    JsonObject actualEntries = new JsonObject(response.getBody().print());
+    int totalRecords = actualEntries.getInteger("totalRecords");
+    assertEquals(0, totalRecords);
   }
 
   private JsonObject getJsonEntity(String id, String name, boolean active, JsonArray templates) {
@@ -328,7 +412,7 @@ public class EventConfigAPIsTest {
   }
 
   private Response requestGetEventEntries() {
-    return request
+    return requestGet
       .when()
       .get(restPath);
   }
@@ -342,6 +426,12 @@ public class EventConfigAPIsTest {
   private Response requestDeleteEntityById(String id) {
     return request.when()
       .delete(String.format(PATH_TEMPLATE, restPath, id));
+  }
+
+  private Response requestGetEventByName(String name) {
+    return request
+      .when()
+      .get(String.format(PATH_TEMPLATE, restPath, "?query=name==" + name));
   }
 
   private String getResponseMessage(Response response) {
