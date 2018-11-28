@@ -30,6 +30,18 @@ Module provides next API:
   | PUT    | /eventConfig/{id}             | Update event config in storage                                    |
   | DELETE | /eventConfig/{id}             | Delete event config from storage                                  |
 
+## API
+
+Pre-populated event configurations:
+
+| Config name            | Description                                | Required context properites                        | Optional context properties |
+|------------------------|--------------------------------------------|----------------------------------------------------|-----------------------------|
+| CREATE_PASSWORD_EVENT  | Email with link to activate account        | "user.personal.firstName", "user.username", "link" | "institution.name"          |
+| RESET_PASSWORD_EVENT   | Email with link to reset password          | "user.personal.firstName", "link"                  | "institution.name"          |
+| PASSWORD_CREATED_EVENT | Email notification about activated account | "user.personal.firstName"                          | "institution.name"          |
+| PASSWORD_CHANGED_EVENT | Email notification about changed password  | "user.personal.firstName", "dateTime"              | -                           |
+| USERNAME_LOCATED_EVENT | Email with username                        | "user.personal.firstName", "user.username"         | "institution.name"          |
+
 ## Compiling
 
 ```
