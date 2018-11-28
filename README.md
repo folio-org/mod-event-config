@@ -30,9 +30,7 @@ Module provides next API:
   | PUT    | /eventConfig/{id}             | Update event config in storage                                    |
   | DELETE | /eventConfig/{id}             | Delete event config from storage                                  |
 
-## API
-
-Pre-populated event configurations:
+## Pre-populated configuration
 
 | Config name            | Description                                | Required context properites                        | Optional context properties |
 |------------------------|--------------------------------------------|----------------------------------------------------|-----------------------------|
