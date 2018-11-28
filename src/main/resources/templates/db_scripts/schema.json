@@ -18,7 +18,8 @@
           "fieldName": "id",
           "tOps": "ADD"
         }
-      ]
+      ],
+      "customSnippetPath": "populate-event-configs.sql"
     }
   ]
 }
