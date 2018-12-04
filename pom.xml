@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.folio</groupId>
   <artifactId>mod-event-config</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <licenses>
@@ -378,9 +378,9 @@
   </build>
 
   <scm>
-    <url>https://github.com/folio-org/mod-event-config</url>
-    <connection>scm:git:git://github.com/folio-org/mod-event-config</connection>
-    <developerConnection>scm:git:git@github.com:folio-org/mod-event-config.git</developerConnection>
+    <url>https://github.com/folio-org/${project.artifactId}</url>
+    <connection>scm:git:git://github.com/folio-org/${project.artifactId}.git</connection>
+    <developerConnection>scm:git:git@github.com:folio-org/${project.artifactId}.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
