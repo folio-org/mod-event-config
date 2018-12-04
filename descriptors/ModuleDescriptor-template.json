@@ -14,9 +14,6 @@
           "pathPattern": "/eventConfig/{id}",
           "permissionsRequired": [
             "event.config.item.get"
-          ],
-          "modulePermissions": [
-            "notify.collection.get"
           ]
         },
         {
@@ -26,9 +23,6 @@
           "pathPattern": "/eventConfig",
           "permissionsRequired": [
             "event.config.collection.get"
-          ],
-          "modulePermissions": [
-            "notify.collection.get"
           ]
         },
         {
@@ -38,10 +32,6 @@
           "pathPattern": "/eventConfig",
           "permissionsRequired": [
             "event.config.item.post"
-          ],
-          "modulePermissions": [
-            "notify.collection.get",
-            "notify.item.get"
           ]
         },
         {
@@ -51,9 +41,6 @@
           "pathPattern": "/eventConfig/{id}",
           "permissionsRequired": [
             "event.config.item.put"
-          ],
-          "modulePermissions": [
-            "notify.collection.get"
           ]
         },
         {
@@ -63,9 +50,6 @@
           "pathPattern": "/eventConfig/{id}",
           "permissionsRequired": [
             "event.config.item.delete"
-          ],
-          "modulePermissions": [
-            "notify.collection.get"
           ]
         }
       ]
