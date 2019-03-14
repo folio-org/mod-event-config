@@ -1,3 +1,6 @@
+## 2019-03-14 v1.1.0
+ * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-4)
+ 
 ## 2018-11-02 v1.0.0
  * Add endpoint GET: /eventConfig  
  
