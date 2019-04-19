@@ -15,10 +15,11 @@ import org.folio.rest.persist.Criteria.Limit;
 import org.folio.rest.persist.Criteria.Offset;
 import org.folio.rest.persist.PgUtil;
 import org.folio.rest.persist.PostgresClient;
+import org.folio.rest.persist.cql.CQLQueryValidationException;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
-import org.z3950.zing.cql.cql2pgjson.FieldException;
+import org.z3950.zing.cql.cql2pgjson.CQL2PgJSONException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -57,7 +58,7 @@ public class EventConfigAPIs implements EventConfig {
         .setLimit(new Limit(limit))
         .setOffset(new Offset(offset));
       return Future.succeededFuture(cqlWrapper);
-    } catch (FieldException e) {
+    } catch (Exception e) {
       return Future.failedFuture(e);
     }
   }
@@ -79,10 +80,17 @@ public class EventConfigAPIs implements EventConfig {
   }
 
   private Response mapException(Throwable throwable) {
+    if (throwable instanceof CQL2PgJSONException ||
+      throwable instanceof CQLQueryValidationException) {
+      return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
+        .type(MediaType.TEXT_PLAIN)
+        .entity(throwable.getMessage())
+        .build();
+    }
     logger.error(throwable);
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
       .type(MediaType.TEXT_PLAIN)
-      .entity(throwable.getMessage())
+      .entity(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
       .build();
   }
 

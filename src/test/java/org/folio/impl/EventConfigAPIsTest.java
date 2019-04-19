@@ -402,6 +402,14 @@ public class EventConfigAPIsTest {
       .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
   }
 
+  @Test
+  public void testInvalidSQL() {
+    requestGet
+      .get(restPath + "?query=invalid_sql")
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST);
+  }
+
   private Response requestPostEventConfig(JsonObject expectedEntity) {
     return request.body(expectedEntity.toString())
       .when()
