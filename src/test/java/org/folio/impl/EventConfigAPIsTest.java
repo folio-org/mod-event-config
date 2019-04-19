@@ -390,6 +390,16 @@ public class EventConfigAPIsTest {
       .put("templates", templates);
   }
 
+  @Test
+  public void testInternalServerError() {
+    request
+      .header(OKAPI_HEADER_TENANT, "invalid-tenant")
+      .when()
+      .get(restPath)
+      .then()
+      .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+  }
+
   private Response requestPostEventConfig(JsonObject expectedEntity) {
     return request.body(expectedEntity.toString())
       .when()

@@ -28,7 +28,6 @@ public class EventConfigAPIs implements EventConfig {
 
   private final Logger logger = LoggerFactory.getLogger(EventConfigAPIs.class);
 
-  private static final String INTERNAL_SERVER_ERROR = "Internal server error";
   private static final String EVENT_CONFIGS = "event_configurations";
 
   private final Vertx vertx;
