@@ -18,7 +18,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
-import org.folio.rest.jaxrs.model.EventEntries;
+import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.Template;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
@@ -49,10 +49,9 @@ public class EventConfigAPIsTest {
   private static final String OKAPI_URL = "http://localhost:%s";
   private static final String PATH_TEMPLATE = "%s/%s";
   private static final String SNAPSHOTS_TABLE_NAME = "event_configurations";
-  private static final String RESPONSE_KEY = "message";
   private static final String EXTERNAL_DATABASE_VAL = "embedded";
 
-  private static final String EXPECTED_ERROR_MESSAGE = "Event Config with ID: `%s` was not found in the db";
+  private static final String EXPECTED_ERROR_MESSAGE = "Not found";
   private static final Logger logger = LoggerFactory.getLogger(EventConfigAPIsTest.class);
 
   private static String restPath;
@@ -164,13 +163,9 @@ public class EventConfigAPIsTest {
     assertEquals(expectedEntity, actualEntityGet);
 
     // update the event config
-    Response responsePut = requestPutEventConfig(actualId, expectedEntity)
+    requestPutEventConfig(actualId, expectedEntity)
       .then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract()
-      .response();
-    JsonObject expectedEntityPut = new JsonObject(responsePut.getBody().print());
-    assertEquals(expectedEntity, expectedEntityPut);
+      .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
   @Test
@@ -191,13 +186,9 @@ public class EventConfigAPIsTest {
     expectedEntity.put("id", actualId);
     assertEquals(expectedEntity, actualEntity);
 
-    Response responseDelete = requestDeleteEntityById(actualId)
+    requestDeleteEntityById(actualId)
       .then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract()
-      .response();
-    String actualMessage = getResponseMessage(responseDelete);
-    assertEquals(String.format(expectedDeleteMessage, actualId), actualMessage);
+      .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
   @Test
@@ -240,7 +231,7 @@ public class EventConfigAPIsTest {
 
   @Test
   public void testGetEventEntries() {
-    EventEntries eventEntries = new EventEntries().withTotalRecords(0);
+    EventConfigCollection eventEntries = new EventConfigCollection().withTotalRecords(0);
     JsonObject expectedEntriesJson = JsonObject.mapFrom(eventEntries);
 
     Response response = requestGetEventEntries()
@@ -285,8 +276,8 @@ public class EventConfigAPIsTest {
       .extract()
       .response();
 
-    String actualMessage = getResponseMessage(response);
-    assertEquals(String.format(EXPECTED_ERROR_MESSAGE, id), actualMessage);
+    String actualMessage = response.asString();
+    assertEquals(EXPECTED_ERROR_MESSAGE, actualMessage);
   }
 
   @Test
@@ -297,12 +288,12 @@ public class EventConfigAPIsTest {
 
     Response response = requestPutEventConfig(id, entity)
       .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .statusCode(HttpStatus.SC_NOT_FOUND)
       .extract()
       .response();
 
-    String actualMessage = getResponseMessage(response);
-    assertEquals(String.format(EXPECTED_ERROR_MESSAGE, id), actualMessage);
+    String actualMessage = response.asString();
+    assertEquals(EXPECTED_ERROR_MESSAGE, actualMessage);
   }
 
   @Test
@@ -310,12 +301,12 @@ public class EventConfigAPIsTest {
     String id = UUID.randomUUID().toString();
     Response response = requestDeleteEntityById(id)
       .then()
-      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .statusCode(HttpStatus.SC_NOT_FOUND)
       .extract()
       .response();
 
-    String actualMessage = getResponseMessage(response);
-    assertEquals(String.format(EXPECTED_ERROR_MESSAGE, id), actualMessage);
+    String actualMessage = response.asString();
+    assertEquals(EXPECTED_ERROR_MESSAGE, actualMessage);
   }
 
   @Test
@@ -432,10 +423,6 @@ public class EventConfigAPIsTest {
     return request
       .when()
       .get(String.format(PATH_TEMPLATE, restPath, "?query=name==" + name));
-  }
-
-  private String getResponseMessage(Response response) {
-    return new JsonObject(response.getBody().print()).getString(RESPONSE_KEY);
   }
 
   private JsonArray createTemplates(String deliveryChannel, String outputFormat) {
