@@ -59,6 +59,7 @@ public class EventConfigAPIsTest {
   private static RequestSpecification requestGet;
   private static Vertx vertx;
   private static String useExternalDatabase;
+  private static int port;
 
   @Rule
   public Timeout timeout = Timeout.seconds(200);
@@ -67,7 +68,7 @@ public class EventConfigAPIsTest {
   public static void setUpClass(final TestContext context) throws Exception {
     Async async = context.async();
     vertx = Vertx.vertx();
-    int port = NetworkUtils.nextFreePort();
+    port = NetworkUtils.nextFreePort();
     Headers headers = new Headers(
       new Header(OKAPI_HEADER_TENANT, TENANT_ID),
       new Header(OKAPI_HEADER_TOKEN, OKAPI_TOKEN_VAL));
@@ -392,7 +393,8 @@ public class EventConfigAPIsTest {
 
   @Test
   public void testInternalServerError() {
-    request
+    RestAssured.given()
+      .port(port)
       .header(OKAPI_HEADER_TENANT, "invalid-tenant")
       .when()
       .get(restPath)

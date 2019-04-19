@@ -82,7 +82,7 @@ public class EventConfigAPIs implements EventConfig {
     logger.error(throwable);
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
       .type(MediaType.TEXT_PLAIN)
-      .entity(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
+      .entity(throwable.getMessage())
       .build();
   }
 
