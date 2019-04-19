@@ -9,7 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "$ref": "event_entity.json"
+        "$ref": "event_config_entity.json"
       }
     },
     "totalRecords": {
