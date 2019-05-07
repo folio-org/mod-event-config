@@ -1,3 +1,6 @@
+## 2019-05-07 v1.2.0
+ * Refactor EventConfigAPIs to use PgUtil (MODEVENTC-6)
+
 ## 2019-03-14 v1.1.0
  * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-4)
  
