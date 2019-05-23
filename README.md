@@ -1,6 +1,6 @@
 # mod-event-config
 
-Copyright (C) 2018 The Open Library Foundation
+Copyright (C) 2018-2019 The Open Library Foundation
 
 This software is distributed under the terms of the Apache License, Version 2.0.
 See the file "[LICENSE](LICENSE)" for more information.
@@ -12,10 +12,11 @@ See the file "[LICENSE](LICENSE)" for more information.
 * [Docker](#docker)
 * [Installing the module](#installing-the-module)
 * [Deploying the module](#deploying-the-module)
+* [Additional information](#additional-information)
 
 ## Introduction
 
-The module provides information describing the notification events. 
+The module provides information describing the notification events.
 The event configuration describes the event name, delivery channels, and contain references to templates for each delivery channel.
 
 ## API
@@ -52,9 +53,9 @@ See that it says "BUILD SUCCESS" near the end.
 Build the docker container with:
 
   * docker build -t mod-event-config .
-   
+
 Test that it runs with:
-  
+
   * docker run -t -i -p 8081:8081 mod-event-config
 
 ## Installing the module
@@ -107,7 +108,15 @@ curl -w '\n' -X POST -D -   \
     http://localhost:9130/_/proxy/tenants/<tenant_name>/modules
 ```
 
+## Additional information
+
 ### Issue tracker
 
 See project [MODLOGIN](https://issues.folio.org/browse/MODLOGIN)
 at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker/).
+
+### ModuleDescriptor
+
+See the built `target/ModuleDescriptor.json` for the interfaces that this module
+requires and provides, the permissions, and the additional module metadata.
+
