@@ -1,3 +1,8 @@
+## 2019-06-11 v1.3.0
+ * Fix security vulnerabilities reported in jackson-databind
+ * Add links to README additional info (FOLIO-473)
+ * Initial module metadata (FOLIO-2003)
+
 ## 2019-05-07 v1.2.0
  * Refactor EventConfigAPIs to use PgUtil (MODEVENTC-6)
 
