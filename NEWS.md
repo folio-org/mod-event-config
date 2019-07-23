@@ -1,3 +1,6 @@
+## 2019-07-23 v1.3.1
+ * Fix security vulnerabilities reported in jackson-databind
+
 ## 2019-06-11 v1.3.0
  * Fix security vulnerabilities reported in jackson-databind
  * Add links to README additional info (FOLIO-473)
