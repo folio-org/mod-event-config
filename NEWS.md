@@ -1,3 +1,6 @@
+## 2019-09-10 v1.3.2
+ * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-11)
+
 ## 2019-07-23 v1.3.1
  * Fix security vulnerabilities reported in jackson-databind
 
