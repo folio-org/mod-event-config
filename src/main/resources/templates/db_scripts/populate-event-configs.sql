@@ -18,7 +18,7 @@ INSERT INTO event_configurations (_id, jsonb) VALUES
  "templates": [
    {
      "templateId": "ed8c1c67-897b-4a23-a702-c36e280c6a93",
-     "outputFormat": "text/plain",
+     "outputFormat": "text/html",
      "deliveryChannel": "email"
    }
  ]
