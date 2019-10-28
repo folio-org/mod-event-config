@@ -112,7 +112,7 @@ curl -w '\n' -X POST -D -   \
 
 ### Issue tracker
 
-See project [MODLOGIN](https://issues.folio.org/browse/MODLOGIN)
+See project [MODEVENTC](https://issues.folio.org/browse/MODEVENTC)
 at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker/).
 
 ### ModuleDescriptor
