@@ -19,14 +19,13 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <raml-module-builder.version>28.0.0</raml-module-builder.version>
+    <raml-module-builder.version>28.1.0</raml-module-builder.version>
     <vertx.version>3.8.1</vertx.version>
     <junit.version>4.12</junit.version>
     <rest-assured.version>4.1.2</rest-assured.version>
     <wiremock.version>2.25.1</wiremock.version>
     <aspectjrt.version>1.9.4</aspectjrt.version>
     <aspectjtools.version>1.9.4</aspectjtools.version>
-    <jackson.version>2.10.0</jackson.version>
 
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     <maven-failsafe-plugin.version>2.20.1</maven-failsafe-plugin.version>
@@ -84,19 +83,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <!-- Overriding versions coming from RMB -->
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${jackson.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <resources>
