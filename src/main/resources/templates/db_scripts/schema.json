@@ -3,19 +3,11 @@
   "tables": [
     {
       "tableName": "event_configurations",
-      "generateId": true,
       "fromModuleVersion": "1.0",
       "withMetadata": true,
-      "pkColumnName": "_id",
       "uniqueIndex": [
         {
           "fieldName": "name",
-          "tOps": "ADD"
-        }
-      ],
-      "index": [
-        {
-          "fieldName": "id",
           "tOps": "ADD"
         }
       ],
