@@ -325,7 +325,7 @@ public class EventConfigAPIsTest {
       .extract()
       .response();
     String body = response.getBody().print();
-    assertTrue(body.contains("value already exists in table"));
+    assertTrue(body.contains("duplicate key value violates unique constraint"));
   }
 
   @Test
