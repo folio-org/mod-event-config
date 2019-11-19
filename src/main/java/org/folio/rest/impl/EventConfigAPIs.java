@@ -1,10 +1,6 @@
 package org.folio.rest.impl;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
@@ -18,8 +14,8 @@ import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLQueryValidationException;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
-import org.z3950.zing.cql.cql2pgjson.CQL2PgJSON;
-import org.z3950.zing.cql.cql2pgjson.CQL2PgJSONException;
+import org.folio.cql2pgjson.CQL2PgJSON;
+import org.folio.cql2pgjson.exception.CQL2PgJSONException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -67,10 +63,10 @@ public class EventConfigAPIs implements EventConfig {
     PostgresClient postgresClient = PostgresClient.getInstance(vertx, tenantId);
 
     String[] fieldList = {"*"};
-    Future<Results<EventEntity>> getFuture = Future.future();
+    Promise<Results<EventEntity>> promise = Promise.promise();
     postgresClient.get(EVENT_CONFIGS, EventEntity.class, fieldList, cqlWrapper,
-      true, false, getFuture.completer());
-    return getFuture;
+      true, false, promise);
+    return promise.future();
   }
 
   private EventConfigCollection mapResultsToConfigCollections(Results<EventEntity> results) {

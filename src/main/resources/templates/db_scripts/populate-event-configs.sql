@@ -1,4 +1,4 @@
-INSERT INTO event_configurations (_id, jsonb) VALUES
+INSERT INTO event_configurations (id, jsonb) VALUES
 ('767c364e-2eae-4e6c-bb55-ebcc68b7bf66', '{
  "id": "767c364e-2eae-4e6c-bb55-ebcc68b7bf66",
  "name": "CREATE_PASSWORD_EVENT",
