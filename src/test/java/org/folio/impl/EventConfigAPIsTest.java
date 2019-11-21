@@ -20,6 +20,7 @@ import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.Template;
+import org.folio.rest.jaxrs.model.TenantAttributes;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.NetworkUtils;
@@ -108,7 +109,8 @@ public class EventConfigAPIsTest {
     DeploymentOptions restDeploymentOptions = new DeploymentOptions().setConfig(new JsonObject().put(HTTP_PORT, port));
     vertx.deployVerticle(RestVerticle.class.getName(), restDeploymentOptions, res -> {
       try {
-        tenantClient.postTenant(null, res2 -> async.complete());
+        TenantAttributes t = new TenantAttributes().withModuleTo("mod-event-config-1.0.0");
+        tenantClient.postTenant(t, res2 -> async.complete());
       } catch (Exception e) {
         // none
       }
