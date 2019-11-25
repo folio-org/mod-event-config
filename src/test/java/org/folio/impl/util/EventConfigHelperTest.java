@@ -9,22 +9,23 @@ import org.junit.Test;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.*;
 
 public class EventConfigHelperTest {
 
   @Test
   public void mapToExceptionTest() {
     Response response = EventConfigHelper.mapException(new CQL2PgJSONException("test"));
-    assertEquals(response.getStatus(), HttpStatus.SC_BAD_REQUEST);
-    assertEquals(response.getMediaType().toString(), MediaType.TEXT_PLAIN);
+    assertThat(response.getStatus(), is(HttpStatus.SC_BAD_REQUEST));
+    assertThat(response.getMediaType().toString(), is(MediaType.TEXT_PLAIN));
 
     response = EventConfigHelper.mapException(new CQLQueryValidationException(null));
-    assertEquals(response.getStatus(), HttpStatus.SC_BAD_REQUEST);
-    assertEquals(response.getMediaType().toString(), MediaType.TEXT_PLAIN);
+    assertThat(response.getStatus(), is(HttpStatus.SC_BAD_REQUEST));
+    assertThat(response.getMediaType().toString(), is(MediaType.TEXT_PLAIN));
 
     response = EventConfigHelper.mapException(new NullPointerException());
-    assertEquals(response.getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
-    assertEquals(response.getMediaType().toString(), MediaType.TEXT_PLAIN);
+    assertThat(response.getStatus(), is(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+    assertThat(response.getMediaType().toString(), is(MediaType.TEXT_PLAIN));
   }
 
 }

@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 public class EventConfigHelper {
   private static final Logger logger = LoggerFactory.getLogger(EventConfigHelper.class);
 
+  private EventConfigHelper() {}
+
   public static Response mapException(Throwable throwable) {
     if (throwable instanceof CQL2PgJSONException ||
       throwable instanceof CQLQueryValidationException) {

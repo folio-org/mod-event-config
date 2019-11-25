@@ -1,8 +1,6 @@
 package org.folio.rest.impl;
 
 import io.vertx.core.*;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.folio.rest.impl.util.EventConfigHelper;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.EventConfigEntity;
