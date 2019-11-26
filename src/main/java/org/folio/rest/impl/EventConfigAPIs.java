@@ -1,8 +1,7 @@
 package org.folio.rest.impl;
 
 import io.vertx.core.*;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.folio.rest.impl.util.EventConfigHelper;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.EventConfigEntity;
 import org.folio.rest.jaxrs.model.EventEntity;
@@ -11,19 +10,14 @@ import org.folio.rest.persist.Criteria.Limit;
 import org.folio.rest.persist.Criteria.Offset;
 import org.folio.rest.persist.PgUtil;
 import org.folio.rest.persist.PostgresClient;
-import org.folio.rest.persist.cql.CQLQueryValidationException;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
 import org.folio.cql2pgjson.CQL2PgJSON;
-import org.folio.cql2pgjson.exception.CQL2PgJSONException;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
 public class EventConfigAPIs implements EventConfig {
-
-  private final Logger logger = LoggerFactory.getLogger(EventConfigAPIs.class);
 
   private static final String EVENT_CONFIGS = "event_configurations";
 
@@ -43,7 +37,7 @@ public class EventConfigAPIs implements EventConfig {
       .map(this::mapResultsToConfigCollections)
       .map(GetEventConfigResponse::respond200WithApplicationJson)
       .map(Response.class::cast)
-      .otherwise(this::mapException)
+      .otherwise(EventConfigHelper::mapException)
       .setHandler(asyncResultHandler);
   }
 
@@ -73,21 +67,6 @@ public class EventConfigAPIs implements EventConfig {
     return new EventConfigCollection()
       .withEventEntity(results.getResults())
       .withTotalRecords(results.getResultInfo().getTotalRecords());
-  }
-
-  private Response mapException(Throwable throwable) {
-    if (throwable instanceof CQL2PgJSONException ||
-      throwable instanceof CQLQueryValidationException) {
-      return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
-        .type(MediaType.TEXT_PLAIN)
-        .entity(throwable.getMessage())
-        .build();
-    }
-    logger.error(throwable);
-    return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-      .type(MediaType.TEXT_PLAIN)
-      .entity(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
-      .build();
   }
 
   @Override
