@@ -1,3 +1,13 @@
+## 2019-04-12 v1.4.0
+ * Update RMB version (MODEVENTC-17)
+ * Use JVM features to manage container memory (MODEVENTC-16)
+ * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-15)
+ * Tenant with "X-Okapi-Request-Id: 1" fails with 500 Internal Server Error (MODEVENTC-14)
+ * Remove old ModuleDescriptor "metadata" section (FOLIO-2321)
+ * Reset password email: Entire Reset password URL is not hyperlinked | Revised reset password template (MODTEMPENG-27)
+ * Add LaunchDescriptor settings  (FOLIO-2234)
+ * Enable kube-deploy pipeline for platform-core modules (FOLIO-2256)
+
 ## 2019-09-10 v1.3.2
  * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-11)
 
