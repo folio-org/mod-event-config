@@ -6,7 +6,7 @@ INSERT INTO event_configurations (id, jsonb) VALUES
  "templates": [
    {
      "templateId": "263d4e33-db8d-4e07-9060-11f442320c05",
-     "outputFormat": "text/plain",
+     "outputFormat": "text/html",
      "deliveryChannel": "email"
    }
  ]
