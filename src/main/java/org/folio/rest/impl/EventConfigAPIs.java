@@ -1,6 +1,10 @@
 package org.folio.rest.impl;
 
-import io.vertx.core.*;
+import java.util.Map;
+
+import javax.ws.rs.core.Response;
+
+import org.folio.cql2pgjson.CQL2PgJSON;
 import org.folio.rest.impl.util.EventConfigHelper;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.EventConfigEntity;
@@ -12,10 +16,13 @@ import org.folio.rest.persist.PgUtil;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.persist.cql.CQLWrapper;
 import org.folio.rest.persist.interfaces.Results;
-import org.folio.cql2pgjson.CQL2PgJSON;
 
-import javax.ws.rs.core.Response;
-import java.util.Map;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
 
 public class EventConfigAPIs implements EventConfig {
 
@@ -38,7 +45,7 @@ public class EventConfigAPIs implements EventConfig {
       .map(GetEventConfigResponse::respond200WithApplicationJson)
       .map(Response.class::cast)
       .otherwise(EventConfigHelper::mapException)
-      .setHandler(asyncResultHandler);
+      .onComplete(asyncResultHandler);
   }
 
   private Future<CQLWrapper> buildSqlWrapper(String query, int offset, int limit) {
