@@ -1,4 +1,8 @@
 ## 2019-04-12 v1.4.1
+ * Update RMB version (MODEVENTC-19)
+ * Update "CREATE_PASSWORD_EVENT" email template (MODTEMPENG-44)
+
+## 2019-04-12 v1.4.1
  * Update RMB version (MODEVENTC-17)
  * Use JVM features to manage container memory (MODEVENTC-16)
  * Fix security vulnerabilities reported in jackson-databind (MODEVENTC-15)
