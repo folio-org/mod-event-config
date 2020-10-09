@@ -1,3 +1,6 @@
+## 2020-10-09 v1.6.0
+ * Upgrade to RMB v31 and JDK11 (MODEVENTC-22)
+ 
 ## 2020-06-11 v1.5.0
  * Update RMB version to 30.0.2 and Vertx to 3.9.1 (MODEVENTC-19)
  * Update "CREATE_PASSWORD_EVENT" email template (MODTEMPENG-44)
