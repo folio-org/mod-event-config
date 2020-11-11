@@ -1,3 +1,6 @@
+## 2020-11-11 v1.6.1
+ * Upgrade to RMB to 31.1.5 and Vert.x to 3.9.4 (MODEVENTC-25)
+ 
 ## 2020-10-09 v1.6.0
  * Upgrade to RMB v31 and JDK11 (MODEVENTC-22)
  
