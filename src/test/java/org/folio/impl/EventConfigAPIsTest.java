@@ -9,13 +9,13 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
@@ -53,7 +53,7 @@ public class EventConfigAPIsTest {
   private static final String EXTERNAL_DATABASE_VAL = "embedded";
 
   private static final String EXPECTED_ERROR_MESSAGE = "Not found";
-  private static final Logger logger = LoggerFactory.getLogger(EventConfigAPIsTest.class);
+  private static final Logger logger = LogManager.getLogger(EventConfigAPIsTest.class);
 
   private static String restPath;
   private static RequestSpecification request;
