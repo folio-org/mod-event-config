@@ -7,20 +7,23 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.ext.web.client.HttpResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
 import org.folio.rest.jaxrs.model.Template;
 import org.folio.rest.jaxrs.model.TenantAttributes;
+import org.folio.rest.jaxrs.model.TenantJob;
 import org.folio.rest.persist.Criteria.Criterion;
 import org.folio.rest.persist.PostgresClient;
 import org.folio.rest.tools.utils.NetworkUtils;
@@ -40,6 +43,8 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(VertxUnitRunner.class)
 public class EventConfigAPIsTest {
@@ -53,7 +58,7 @@ public class EventConfigAPIsTest {
   private static final String EXTERNAL_DATABASE_VAL = "embedded";
 
   private static final String EXPECTED_ERROR_MESSAGE = "Not found";
-  private static final Logger logger = LoggerFactory.getLogger(EventConfigAPIsTest.class);
+  private static final Logger logger = LogManager.getLogger(EventConfigAPIsTest.class);
 
   private static String restPath;
   private static RequestSpecification request;
@@ -110,7 +115,33 @@ public class EventConfigAPIsTest {
     vertx.deployVerticle(RestVerticle.class.getName(), restDeploymentOptions, res -> {
       try {
         TenantAttributes t = new TenantAttributes().withModuleTo("mod-event-config-1.0.0");
-        tenantClient.postTenant(t, res2 -> async.complete());
+        tenantClient.postTenant(t, postResult -> {
+          if (postResult.failed()) {
+            Throwable cause = postResult.cause();
+            logger.error(cause);
+            context.fail(cause);
+            return;
+          }
+
+          final HttpResponse<Buffer> postResponse = postResult.result();
+          assertThat(postResponse.statusCode(), is(201));
+
+          String jobId = postResponse.bodyAsJson(TenantJob.class).getId();
+
+          tenantClient.getTenantByOperationId(jobId, 10000, getResult -> {
+            if (getResult.failed()) {
+              Throwable cause = getResult.cause();
+              logger.error(cause.getMessage());
+              context.fail(cause);
+              return;
+            }
+
+            final HttpResponse<Buffer> getResponse = getResult.result();
+            assertThat(getResponse.statusCode(), is(200));
+            assertThat(getResponse.bodyAsJson(TenantJob.class).getComplete(), is(true));
+            async.complete();
+          });
+        });
       } catch (Exception e) {
         // none
       }
