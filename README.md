@@ -49,6 +49,12 @@ Module provides next API:
 
 See that it says "BUILD SUCCESS" near the end.
 
+## Jar Options
+
+For options when running the generated jar file see
+* https://github.com/folio-org/raml-module-builder#command-line-options
+* https://github.com/folio-org/raml-module-builder#environment-variables
+
 ## Docker
 Build the docker container with:
 
