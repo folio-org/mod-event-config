@@ -18,6 +18,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.postgres.testing.PostgresTesterContainer;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
 import org.folio.rest.jaxrs.model.EventConfigCollection;
@@ -100,8 +101,7 @@ public class EventConfigAPIsTest {
         PostgresClient.setConfigFilePath(postgresConfigPath);
         break;
       case EXTERNAL_DATABASE_VAL:
-        PostgresClient.setIsEmbedded(true);
-        PostgresClient.getInstance(vertx).startEmbeddedPostgres();
+        PostgresClient.setPostgresTester(new PostgresTesterContainer());
         break;
       default:
         String message = "No understood database choice made." +
@@ -153,7 +153,7 @@ public class EventConfigAPIsTest {
     Async async = context.async();
     vertx.close(context.asyncAssertSuccess(res -> {
       if (useExternalDatabase.equals(EXTERNAL_DATABASE_VAL)) {
-        PostgresClient.stopEmbeddedPostgres();
+        PostgresClient.stopPostgresTester();
       }
       async.complete();
     }));
