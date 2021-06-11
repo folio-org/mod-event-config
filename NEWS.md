@@ -1,3 +1,6 @@
+## 2021-06-11 v2.1.0
+ * Upgrade to RMB 33.0.0 and Vert.x 4.1.0 (MODEVENTC-30)
+
 ## 2021-03-09 v1.7.0
  * Upgrade to RMB 32.1.0 and Vert.x 4.0.0 (MODEVENTC-27)
  * Upgrade to RMB 31.1.5 and Vert.x 3.9.4 (MODEVENTC-25)
