@@ -1,3 +1,6 @@
+## 2021-12-16 v2.1.1
+ * Upgrade to RMB to v33.0.4 and Log4j 2.16.0 (MODEVENTC-35)
+
 ## 2021-06-11 v2.1.0
  * Upgrade to RMB 33.0.0 and Vert.x 4.1.0 (MODEVENTC-30)
 
