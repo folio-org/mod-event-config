@@ -1,3 +1,10 @@
+## 2022-02-23 v2.2.0
+* Add new summary id trait for the transaction API (MODFISTO-268)
+* Add totalRecords calculation options: exact, estimated, none, auto (RMB-724, RMB-718)
+* Remove lang query parameter and language.raml trait (FOLIO-3351)
+* Use string, not enum, for easy calling of PgUtil methods
+* Move totalRecords before offset
+
 ## 2021-06-11 v2.1.0
  * Upgrade to RMB 33.0.0 and Vert.x 4.1.0 (MODEVENTC-30)
 
