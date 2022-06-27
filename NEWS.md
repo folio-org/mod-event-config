@@ -1,3 +1,6 @@
+## 2022-06-27 v2.3.0
+* Upgrade to RMB v34.0.0 (MODEVENTC-41)
+
 ## 2022-02-23 v2.2.0
 * Add new summary id trait for the transaction API (MODFISTO-268)
 * Add totalRecords calculation options: exact, estimated, none, auto (RMB-724, RMB-718)
