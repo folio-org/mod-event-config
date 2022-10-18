@@ -1,3 +1,6 @@
+## 2022-10-18 v2.4.0
+* Upgrade to RMB v35.0.0, Vertx v4.3.3 (MODEVENTC-43)
+
 ## 2022-06-27 v2.3.0
 * Upgrade to RMB v34.0.0 (MODEVENTC-41)
 
