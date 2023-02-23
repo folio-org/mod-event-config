@@ -1,3 +1,6 @@
+## 2023-02-23 v2.5.0
+* Add log4j configuration (MODEVENTC-47)
+
 ## 2022-10-18 v2.4.0
 * Upgrade to RMB v35.0.0, Vertx v4.3.3 (MODEVENTC-43)
 
