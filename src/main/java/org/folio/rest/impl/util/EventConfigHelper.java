@@ -14,14 +14,16 @@ public class EventConfigHelper {
   private EventConfigHelper() {}
 
   public static Response mapException(Throwable throwable) {
+    logger.debug("mapException:: Mapping Exception");
     if (throwable instanceof CQL2PgJSONException ||
       throwable instanceof CQLQueryValidationException) {
+      logger.warn("mapException:: It is a BAD_REQUEST and here's the message : {}",throwable.getMessage());
       return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
         .type(MediaType.TEXT_PLAIN)
         .entity(throwable.getMessage())
         .build();
     }
-    logger.error(throwable);
+    logger.warn("mapException :: There is a {}",Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
       .type(MediaType.TEXT_PLAIN)
       .entity(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
