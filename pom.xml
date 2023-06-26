@@ -19,6 +19,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <vertx.version>4.3.3</vertx.version>
     <rest-assured.version>4.3.0</rest-assured.version>
+    <java.version>17</java.version>
+    <aspectj.version>1.9.19</aspectj.version>
   </properties>
 
   <dependencies>
@@ -85,7 +87,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>11</release>
+          <release>${java.version}</release>
           <encoding>UTF-8</encoding>
           <useIncrementalCompilation>false</useIncrementalCompilation>
           <annotationProcessors>
@@ -143,12 +145,12 @@
       </plugin>
 
       <plugin>
-        <groupId>com.nickwongdev</groupId>
+        <groupId>dev.aspectj</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.12.6</version>
+        <version>1.13.1</version>
         <configuration>
           <verbose>true</verbose>
-          <complianceLevel>11</complianceLevel>
+          <release>${java.version}</release>
           <includes>
             <include>**/impl/*.java</include>
             <include>**/*.aj</include>
@@ -174,12 +176,12 @@
           <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.9.6</version>
+            <version>${aspectj.version}</version>
           </dependency>
           <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjtools</artifactId>
-            <version>1.9.6</version>
+            <version>${aspectj.version}</version>
           </dependency>
         </dependencies>
       </plugin>
