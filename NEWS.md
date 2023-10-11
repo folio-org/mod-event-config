@@ -1,3 +1,9 @@
+## 2023-10-11 v2.6.0
+* Logging improvement (MODEVENTC-39)
+* Update copyright year (FOLIO-1021)
+* Use GitHub Workflows api-lint, api-schema-lint and api-doc (FOLIO-3678)
+* Update to Java 17 (MODEVENTC-50)
+
 ## 2023-02-23 v2.5.0
 * Add log4j configuration (MODEVENTC-47)
 
