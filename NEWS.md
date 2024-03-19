@@ -1,3 +1,6 @@
+## 2024-03-19 v2.7.0
+* Upgrade RAML and Vertx Version (MODEVENTC-53)
+
 ## 2023-10-11 v2.6.0
 * Logging improvement (MODEVENTC-39)
 * Update copyright year (FOLIO-1021)
