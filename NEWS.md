@@ -1,3 +1,6 @@
+## 2024-05-03 v2.7.1
+* Release 2.7.1 with Vert.x 4.5 fixing HttpPostRequestDecoder buffer overflow (MODEVENTC-54)
+
 ## 2024-03-19 v2.7.0
 * Upgrade RAML and Vertx Version (MODEVENTC-53)
 
