@@ -1,3 +1,6 @@
+## 2024-05-03 v2.8.0
+* Upgrade RMB version to V.35.3.0 [MODEVENTC-58](https://folio-org.atlassian.net/browse/MODEVENTC-58) (Ramsons (R2 2024))
+
 ## 2024-05-03 v2.7.1
 * Release 2.7.1 with Vert.x 4.5 fixing HttpPostRequestDecoder buffer overflow (MODEVENTC-54)
 
