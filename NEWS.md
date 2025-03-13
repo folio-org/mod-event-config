@@ -1,4 +1,4 @@
-## 2025-03-XX v2.9.0
+## 2025-03-13 v2.9.0
 * Java and RMB version upgrade Sunflower [FOLIO-4224](https://folio-org.atlassian.net/browse/FOLIO-4224) 
 
 ## 2024-05-03 v2.8.0
