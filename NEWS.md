@@ -1,3 +1,6 @@
+## 2025-12-22 v2.9.1
+* Update to RMB 35.4.1 [MODEVENTC-73](https://folio-org.atlassian.net/browse/MODEVENTC-73)
+
 ## 2025-03-13 v2.9.0
 * Java and RMB version upgrade Sunflower [FOLIO-4224](https://folio-org.atlassian.net/browse/FOLIO-4224) 
 
