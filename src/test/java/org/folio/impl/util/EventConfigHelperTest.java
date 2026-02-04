@@ -1,6 +1,6 @@
 package org.folio.impl.util;
 
-import org.apache.http.HttpStatus;
+import org.folio.HttpStatus;
 import org.folio.cql2pgjson.exception.CQL2PgJSONException;
 import org.folio.rest.impl.util.EventConfigHelper;
 import org.folio.rest.persist.cql.CQLQueryValidationException;
