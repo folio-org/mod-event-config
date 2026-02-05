@@ -1,5 +1,8 @@
 package org.folio.impl.util;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 import org.folio.HttpStatus;
 import org.folio.cql2pgjson.exception.CQL2PgJSONException;
 import org.folio.rest.impl.util.EventConfigHelper;
@@ -8,8 +11,6 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import static org.junit.Assert.*;
-import static org.hamcrest.core.Is.*;
 
 public class EventConfigHelperTest {
 

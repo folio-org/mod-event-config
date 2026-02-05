@@ -25,7 +25,7 @@
 
     <!-- Test dependency versions -->
     <rest-assured.version>6.0.0</rest-assured.version>
-    <aspectj.version>1.9.25.1</aspectj.version>
+    <aspectj.version>1.9.22.1</aspectj.version>
     <junit.version>4.13.2</junit.version>
 
     <!-- Plugin versions -->

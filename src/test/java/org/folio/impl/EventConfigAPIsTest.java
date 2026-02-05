@@ -14,7 +14,6 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.client.HttpResponse;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.folio.HttpStatus;
@@ -42,6 +41,7 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
 import static org.hamcrest.CoreMatchers.is;
@@ -261,7 +261,7 @@ public class EventConfigAPIsTest {
       .getJsonArray("templates")
       .getJsonObject(0)
       .getString("outputFormat");
-    assertEquals(expected, "text/plain");
+    assertEquals("text/plain", expected);
   }
 
   @Test
@@ -281,12 +281,12 @@ public class EventConfigAPIsTest {
 
   @Test
   public void testGetAllEventEntries() {
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(10),
+    requestPostEventConfig(getJsonEntity(null, secure().nextAlphabetic(10),
       false, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
 
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(20),
+    requestPostEventConfig(getJsonEntity(null, secure().nextAlphabetic(20),
       true, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
@@ -318,7 +318,7 @@ public class EventConfigAPIsTest {
   @Test
   public void testPutEventConfigById() {
     String id = UUID.randomUUID().toString();
-    JsonObject entity = getJsonEntity("0002", RandomStringUtils.randomAlphabetic(20),
+    JsonObject entity = getJsonEntity("0002", secure().nextAlphabetic(20),
       true, new JsonArray());
 
     Response response = requestPutEventConfig(id, entity)
