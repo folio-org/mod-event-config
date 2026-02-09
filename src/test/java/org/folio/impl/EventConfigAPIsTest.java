@@ -14,10 +14,9 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.ext.web.client.HttpResponse;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.HttpStatus;
 import org.folio.postgres.testing.PostgresTesterContainer;
 import org.folio.rest.RestVerticle;
 import org.folio.rest.client.TenantClient;
@@ -42,6 +41,7 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TENANT;
 import static org.folio.rest.RestVerticle.OKAPI_HEADER_TOKEN;
 import static org.hamcrest.CoreMatchers.is;
@@ -72,7 +72,7 @@ public class EventConfigAPIsTest {
   public Timeout timeout = Timeout.seconds(200);
 
   @BeforeClass
-  public static void setUpClass(final TestContext context) throws Exception {
+  public static void setUpClass(final TestContext context) {
     Async async = context.async();
     vertx = Vertx.vertx();
     port = NetworkUtils.nextFreePort();
@@ -112,51 +112,53 @@ public class EventConfigAPIsTest {
 
     TenantClient tenantClient = new TenantClient(String.format(OKAPI_URL, port), TENANT_ID, OKAPI_TOKEN_VAL);
     DeploymentOptions restDeploymentOptions = new DeploymentOptions().setConfig(new JsonObject().put(HTTP_PORT, port));
-    vertx.deployVerticle(RestVerticle.class.getName(), restDeploymentOptions, res -> {
-      try {
-        TenantAttributes t = new TenantAttributes().withModuleTo("mod-event-config-1.0.0");
-        tenantClient.postTenant(t, postResult -> {
-          if (postResult.failed()) {
-            Throwable cause = postResult.cause();
-            logger.error(cause);
-            context.fail(cause);
-            return;
-          }
-
-          final HttpResponse<Buffer> postResponse = postResult.result();
-          assertThat(postResponse.statusCode(), is(201));
-
-          String jobId = postResponse.bodyAsJson(TenantJob.class).getId();
-
-          tenantClient.getTenantByOperationId(jobId, 10000, getResult -> {
-            if (getResult.failed()) {
-              Throwable cause = getResult.cause();
-              logger.error(cause.getMessage());
+    vertx.deployVerticle(RestVerticle.class.getName(), restDeploymentOptions)
+      .onComplete(res -> {
+        try {
+          TenantAttributes t = new TenantAttributes().withModuleTo("mod-event-config-1.0.0");
+          tenantClient.postTenant(t, postResult -> {
+            if (postResult.failed()) {
+              Throwable cause = postResult.cause();
+              logger.error(cause);
               context.fail(cause);
               return;
             }
 
-            final HttpResponse<Buffer> getResponse = getResult.result();
-            assertThat(getResponse.statusCode(), is(200));
-            assertThat(getResponse.bodyAsJson(TenantJob.class).getComplete(), is(true));
-            async.complete();
+            final HttpResponse<Buffer> postResponse = postResult.result();
+            assertThat(postResponse.statusCode(), is(201));
+
+            String jobId = postResponse.bodyAsJson(TenantJob.class).getId();
+
+            tenantClient.getTenantByOperationId(jobId, 10000, getResult -> {
+              if (getResult.failed()) {
+                Throwable cause = getResult.cause();
+                logger.error(cause.getMessage());
+                context.fail(cause);
+                return;
+              }
+
+              final HttpResponse<Buffer> getResponse = getResult.result();
+              assertThat(getResponse.statusCode(), is(200));
+              assertThat(getResponse.bodyAsJson(TenantJob.class).getComplete(), is(true));
+              async.complete();
+            });
           });
-        });
-      } catch (Exception e) {
-        // none
-      }
-    });
+        } catch (Exception e) {
+          // none
+        }
+      });
   }
 
   @AfterClass
   public static void tearDownClass(final TestContext context) {
     Async async = context.async();
-    vertx.close(context.asyncAssertSuccess(res -> {
-      if (useExternalDatabase.equals(EXTERNAL_DATABASE_VAL)) {
-        PostgresClient.stopPostgresTester();
-      }
-      async.complete();
-    }));
+    vertx.close()
+      .onComplete(context.asyncAssertSuccess(res -> {
+        if (useExternalDatabase.equals(EXTERNAL_DATABASE_VAL)) {
+          PostgresClient.stopPostgresTester();
+        }
+        async.complete();
+      }));
   }
 
   @Before
@@ -206,7 +208,6 @@ public class EventConfigAPIsTest {
   public void testPostEventConfig() {
     String id = UUID.randomUUID().toString();
     JsonObject expectedEntity = getJsonEntity(id, "RESET_PASSWORD", false, new JsonArray());
-    String expectedDeleteMessage = "Configuration with id: '%s' was successfully deleted";
 
     // create a new event config
     Response response = requestPostEventConfig(expectedEntity)
@@ -260,7 +261,7 @@ public class EventConfigAPIsTest {
       .getJsonArray("templates")
       .getJsonObject(0)
       .getString("outputFormat");
-    assertEquals(expected, "text/plain");
+    assertEquals("text/plain", expected);
   }
 
   @Test
@@ -280,12 +281,12 @@ public class EventConfigAPIsTest {
 
   @Test
   public void testGetAllEventEntries() {
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(10),
+    requestPostEventConfig(getJsonEntity(null, secure().nextAlphabetic(10),
       false, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
 
-    requestPostEventConfig(getJsonEntity(null, RandomStringUtils.randomAlphabetic(20),
+    requestPostEventConfig(getJsonEntity(null, secure().nextAlphabetic(20),
       true, new JsonArray()))
       .then()
       .statusCode(HttpStatus.SC_CREATED);
@@ -317,7 +318,7 @@ public class EventConfigAPIsTest {
   @Test
   public void testPutEventConfigById() {
     String id = UUID.randomUUID().toString();
-    JsonObject entity = getJsonEntity("0002", RandomStringUtils.randomAlphabetic(20),
+    JsonObject entity = getJsonEntity("0002", secure().nextAlphabetic(20),
       true, new JsonArray());
 
     Response response = requestPutEventConfig(id, entity)

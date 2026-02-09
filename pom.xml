@@ -14,13 +14,29 @@
   </licenses>
 
   <properties>
-    <raml-module-builder.version>35.4.0</raml-module-builder.version>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.5.13</vertx.version>
-    <rest-assured.version>5.5.1</rest-assured.version>
     <java.version>21</java.version>
+
+    <!-- Dependency versions -->
+    <raml-module-builder.version>36.0.0-SNAPSHOT</raml-module-builder.version>
+    <vertx.version>5.0.6</vertx.version>
+    <log4j.version>2.25.2</log4j.version>
+
+    <!-- Test dependency versions -->
+    <rest-assured.version>6.0.0</rest-assured.version>
     <aspectj.version>1.9.22.1</aspectj.version>
+    <junit.version>4.13.2</junit.version>
+
+    <!-- Plugin versions -->
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+    <aspectj-maven-plugin.version>1.14.1</aspectj-maven-plugin.version>
+    <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+    <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
+    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+    <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
+    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -28,7 +44,7 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-bom</artifactId>
-        <version>2.24.3</version>
+        <version>${log4j.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -71,6 +87,12 @@
       <version>${raml-module-builder.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -91,7 +113,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <release>${java.version}</release>
           <encoding>UTF-8</encoding>
@@ -119,7 +141,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>${build-helper-maven-plugin.version}</version>
         <executions>
           <execution>
             <id>add_generated_sources_folder</id>
@@ -153,7 +175,7 @@
       <plugin>
         <groupId>dev.aspectj</groupId>
         <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.14</version>
+        <version>${aspectj-maven-plugin.version}</version>
         <configuration>
           <verbose>true</verbose>
           <release>${java.version}</release>
@@ -195,7 +217,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>${maven-resources-plugin.version}</version>
         <executions>
           <execution>
             <id>copy-resources</id>
@@ -236,7 +258,7 @@
       <plugin>
         <groupId>com.coderplus.maven.plugins</groupId>
         <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>${copy-rename-maven-plugin.version}</version>
         <executions>
           <execution>
             <id>rename-descriptor-outputs</id>
@@ -263,7 +285,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>${maven-antrun-plugin.version}</version>
         <executions>
           <execution>
             <!-- Replace the baseUri in the RAMLs that have been copied to
@@ -286,7 +308,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>${maven-shade-plugin.version}</version>
         <configuration>
           <filters>
             <filter>
@@ -312,6 +334,7 @@
                     <Multi-Release>true</Multi-Release>
                   </manifestEntries>
                 </transformer>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
               </transformers>
               <artifactSet />
               <outputFile>${project.build.directory}/${project.artifactId}-fat.jar</outputFile>
@@ -323,7 +346,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>${maven-release-plugin.version}</version>
         <configuration>
           <preparationGoals>clean verify</preparationGoals>
           <tagNameFormat>v@{project.version}</tagNameFormat>

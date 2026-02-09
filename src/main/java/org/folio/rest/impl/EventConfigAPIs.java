@@ -75,7 +75,7 @@ public class EventConfigAPIs implements EventConfig {
     String[] fieldList = {"*"};
     Promise<Results<EventEntity>> promise = Promise.promise();
     postgresClient.get(EVENT_CONFIGS, EventEntity.class, fieldList, cqlWrapper,
-      true, false, promise);
+      true, false, promise::handle);
     return promise.future();
   }
 
