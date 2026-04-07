@@ -56,14 +56,14 @@ public class EventConfigAPIs implements EventConfig {
   private Future<CQLWrapper> buildSqlWrapper(String query, int offset, int limit) {
     logger.debug("buildSqlWrapper:: Trying to build SQL Wrapper");
     try {
-      logger.info("buildSqlWrapper:: Building SQL Wrapper with query {},offset {} and limit {}",query,offset,limit);
+      logger.info("buildSqlWrapper:: Building SQL Wrapper");
       CQL2PgJSON cql2pgJson = new CQL2PgJSON(EVENT_CONFIGS + ".jsonb");
       CQLWrapper cqlWrapper = new CQLWrapper(cql2pgJson, query)
         .setLimit(new Limit(limit))
         .setOffset(new Offset(offset));
       return Future.succeededFuture(cqlWrapper);
     } catch (Exception e) {
-      logger.warn("buildSqlWrapper:: Error building SQL Wrapper, here's the message : {}",e.getMessage());
+      logger.warn("buildSqlWrapper:: Error building SQL Wrapper");
       return Future.failedFuture(e);
     }
   }

@@ -17,7 +17,7 @@ public class EventConfigHelper {
     logger.debug("mapException:: Mapping Exception");
     if (throwable instanceof CQL2PgJSONException ||
       throwable instanceof CQLQueryValidationException) {
-      logger.warn("mapException:: It is a BAD_REQUEST and here's the message : {}",throwable.getMessage());
+      logger.warn("mapException:: Returning BAD_REQUEST");
       return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
         .type(MediaType.TEXT_PLAIN)
         .entity(throwable.getMessage())
