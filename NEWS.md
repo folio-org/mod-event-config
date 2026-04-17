@@ -1,5 +1,20 @@
-## 2026-XX-XX v2.10.0-SNAPSHOT 
+## v2.10.0 2026-04-16
+
+### Features
 * Upgrade module to Vert.x 5.0 ([MODEVENTC-69](https://folio-org.atlassian.net/browse/MODEVENTC-69))
+
+### Bug fixes
+* Remove sensitive data from logs ([MODEVENTC-64](https://folio-org.atlassian.net/browse/MODEVENTC-64))
+
+### Dependencies
+* Bump `raml-module-builder` from `35.4.0` to `36.0.0`
+* Bump `vertx` from `4.5.13` to `5.0.6`
+* Bump `log4j` from `2.24.3` to `2.25.2`
+* Bump `rest-assured` from `5.5.1` to `6.0.0`
+* Bump `maven-compiler-plugin` from `3.14.0` to `3.14.1`
+* Bump `build-helper-maven-plugin` from `3.6.0` to `3.6.1`
+* Bump `aspectj-maven-plugin` from `1.14` to `1.14.1`
+* Bump `maven-shade-plugin` from `3.6.0` to `3.6.1`
 
 ## 2025-03-13 v2.9.0
 * Java and RMB version upgrade Sunflower [FOLIO-4224](https://folio-org.atlassian.net/browse/FOLIO-4224) 
