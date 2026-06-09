@@ -1,3 +1,10 @@
+## 2.11.0 In Progress
+
+### Tech Debt
+* Use GitHub Workflows for Maven ([MODEVENTC-74](https://folio-org.atlassian.net/browse/MODEVENTC-74))
+
+---
+
 ## v2.10.0 2026-04-16
 
 ### Features
