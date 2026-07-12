@@ -24,7 +24,7 @@
     <log4j.version>2.26.0</log4j.version>
 
     <!-- Test dependency versions -->
-    <rest-assured.version>6.0.0</rest-assured.version>
+    <rest-assured.version>6.0.1</rest-assured.version>
     <aspectj.version>1.9.25.1</aspectj.version>
     <junit.version>4.13.2</junit.version>
 
