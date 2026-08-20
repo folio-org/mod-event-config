@@ -1,9 +1,11 @@
 ## 2.11.0 In Progress
 
+### Breaking changes
+* Constrain `sms` templates to `text/plain` ([MODEVENTC-77](https://folio-org.atlassian.net/browse/MODEVENTC-77))
+* Bump interface `mod-event` from `1.0` to `2.0`
+
 ### Tech Debt
 * Use GitHub Workflows for Maven ([MODEVENTC-74](https://folio-org.atlassian.net/browse/MODEVENTC-74))
-
----
 
 ## v2.10.0 2026-04-16
 

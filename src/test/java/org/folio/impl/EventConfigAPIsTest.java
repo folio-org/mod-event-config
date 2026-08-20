@@ -265,6 +265,38 @@ public class EventConfigAPIsTest {
   }
 
   @Test
+  public void testPostSmsEventConfigRejectsHtmlOutputFormat() {
+    JsonArray templates = createTemplates("sms", "text/html");
+    JsonObject expectedEntity = getJsonEntity(UUID.randomUUID().toString(), "sms_html", true, templates);
+
+    Response response = requestPostEventConfig(expectedEntity)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .extract()
+      .response();
+
+    String body = response.asString();
+    assertTrue(body.contains("SMS notification templates must use outputFormat 'text/plain'"));
+    assertTrue(body.contains("Template 0"));
+  }
+
+  @Test
+  public void testPutSmsEventConfigRejectsHtmlOutputFormat() {
+    JsonArray templates = createTemplates("sms", "text/html");
+    JsonObject entity = getJsonEntity(UUID.randomUUID().toString(), "sms_html_update", true, templates);
+
+    Response response = requestPutEventConfig(UUID.randomUUID().toString(), entity)
+      .then()
+      .statusCode(HttpStatus.SC_BAD_REQUEST)
+      .extract()
+      .response();
+
+    String body = response.asString();
+    assertTrue(body.contains("SMS notification templates must use outputFormat 'text/plain'"));
+    assertTrue(body.contains("Template 0"));
+  }
+
+  @Test
   public void testGetEventEntries() {
     EventConfigCollection eventEntries = new EventConfigCollection().withTotalRecords(0);
     JsonObject expectedEntriesJson = JsonObject.mapFrom(eventEntries);
