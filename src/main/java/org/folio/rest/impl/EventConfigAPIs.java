@@ -90,6 +90,11 @@ public class EventConfigAPIs implements EventConfig {
   public void postEventConfig(String lang, EventConfigEntity entity, Map<String, String> okapiHeaders,
                               Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     logger.debug("postEventConfig:: Trying to post the Event Configuration");
+    Response validationResponse = EventConfigHelper.validateSmsTemplateOutputFormats(entity);
+    if (validationResponse != null) {
+      asyncResultHandler.handle(Future.succeededFuture(validationResponse));
+      return;
+    }
     PgUtil.post(EVENT_CONFIGS, entity, okapiHeaders, vertxContext, PostEventConfigResponse.class, asyncResultHandler);
   }
 
@@ -111,6 +116,11 @@ public class EventConfigAPIs implements EventConfig {
   public void putEventConfigById(String id, String lang, EventConfigEntity entity, Map<String, String> okapiHeaders,
                                  Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     logger.debug("putEventConfigById:: Trying to update the Event Configuration By Id : {}",id);
+    Response validationResponse = EventConfigHelper.validateSmsTemplateOutputFormats(entity);
+    if (validationResponse != null) {
+      asyncResultHandler.handle(Future.succeededFuture(validationResponse));
+      return;
+    }
     PgUtil.put(EVENT_CONFIGS, entity, id, okapiHeaders, vertxContext, PutEventConfigByIdResponse.class, asyncResultHandler);
   }
 }
